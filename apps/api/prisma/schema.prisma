@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  phone         String   @unique
+  name          String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  otpCodes      OtpCode[]
+  refreshTokens RefreshToken[]
+  appointments  Appointment[]
+}
+
+model OtpCode {
+  id        String   @id @default(cuid())
+  phone     String
+  codeHash  String
+  attempts  Int      @default(0)
+  expiresAt DateTime
+  consumedAt DateTime?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
+
+  @@index([phone])
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  tokenHash String   @unique
+  familyId  String
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([familyId])
+}
+
+model Specialty {
+  id             String   @id @default(cuid())
+  name           String   @unique
+  description    String   @db.Text
+  icon           String?
+  avgDurationMin Int      @default(30)
+  createdAt      DateTime @default(now())
+  doctors        Doctor[]
+  appointments   Appointment[]
+}
+
+model Doctor {
+  id               String   @id @default(cuid())
+  name             String
+  specialty        Specialty @relation(fields: [specialtyId], references: [id], onDelete: Restrict)
+  specialtyId      String
+  yearsExperience  Int
+  rating           Float    @default(5.0)
+  bio              String?  @db.Text
+  availability     DoctorAvailability[]
+  appointments     Appointment[]
+  createdAt        DateTime @default(now())
+
+  @@index([specialtyId])
+}
+
+model DoctorAvailability {
+  id        String   @id @default(cuid())
+  doctor    Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  doctorId  String
+  weekday   Int
+  startTime String
+  endTime   String
+  createdAt DateTime @default(now())
+
+  @@unique([doctorId, weekday, startTime, endTime])
+  @@index([doctorId])
+}
+
+enum AppointmentStatus {
+  HELD
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model Appointment {
+  id            String   @id @default(cuid())
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  doctor        Doctor   @relation(fields: [doctorId], references: [id], onDelete: Restrict)
+  doctorId      String
+  specialty     Specialty @relation(fields: [specialtyId], references: [id], onDelete: Restrict)
+  specialtyId   String
+  startsAt      DateTime
+  durationMin   Int
+  status        AppointmentStatus
+  holdExpiresAt DateTime?
+  notes         String?  @db.Text
+  slotKey       String?  @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
+  @@index([doctorId])
+  @@index([startsAt])
+  @@index([doctorId, startsAt])
+}
