@@ -1,14 +1,12 @@
 import { DateTime } from 'luxon';
 import type { Slot } from '@cortex/shared';
 
-// A weekly clinic-local availability window. weekday follows Luxon's 1=Mon…7=Sun.
 export type AvailabilityWindow = {
   weekday: number;
-  startTime: string; // "HH:mm" clinic-local
-  endTime: string; // "HH:mm" clinic-local
+  startTime: string;
+  endTime: string;
 };
 
-// The subset of an existing appointment the engine needs to decide occupancy.
 export type OccupyingAppointment = {
   startsAt: Date;
   status: 'HELD' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
@@ -18,14 +16,12 @@ export type OccupyingAppointment = {
 export type ComputeFreeSlotsArgs = {
   availability: AvailabilityWindow[];
   appointments: OccupyingAppointment[];
-  date: string; // "YYYY-MM-DD", interpreted in `tz`
+  date: string;
   tz: string;
   durationMin: number;
   now: Date;
 };
 
-// True when the appointment still holds its slot. A HELD row past its
-// holdExpiresAt is treated as free (lazy expiry — no cron).
 const isOccupying = (appt: OccupyingAppointment, now: Date): boolean => {
   if (appt.status === 'CONFIRMED') return true;
   if (appt.status === 'COMPLETED') return true;
@@ -52,8 +48,6 @@ const windowSlots = (
   return slots;
 };
 
-// Free slots for a doctor on a date = availability grid − occupied − past.
-// Everything returned is a UTC ISO instant. Pure and deterministic given `now`.
 export const computeFreeSlots = (args: ComputeFreeSlotsArgs): Slot[] => {
   const { availability, appointments, date, tz, durationMin, now } = args;
 
@@ -82,6 +76,5 @@ export const computeFreeSlots = (args: ComputeFreeSlotsArgs): Slot[] => {
   return result.sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 };
 
-// Whether a client-supplied UTC ISO timestamp is one of the currently free slots.
 export const isFreeSlot = (startsAtIso: string, freeSlots: Slot[]): boolean =>
   freeSlots.some((s) => s.startsAt === startsAtIso);

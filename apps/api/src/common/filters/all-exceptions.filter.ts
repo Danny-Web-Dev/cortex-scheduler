@@ -14,9 +14,6 @@ import { DomainException } from '../exceptions';
 
 type Resolved = { status: number; code: ErrorCode; message: string };
 
-// One place that turns every thrown thing into { error: { code, message } }.
-// Services throw DomainExceptions; framework throws HttpExceptions; anything
-// unrecognized is a 500 whose real cause is logged but never leaked.
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   private readonly logger = new Logger(AllExceptionsFilter.name);
