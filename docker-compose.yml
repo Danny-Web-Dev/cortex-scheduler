@@ -1,0 +1,28 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: cortex-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-cortex_dev_root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-cortex}
+    ports:
+      - '${MYSQL_PORT:-3306}:3306'
+    volumes:
+      - cortex_mysql_data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'mysqladmin',
+          'ping',
+          '-h',
+          'localhost',
+          '-p${MYSQL_ROOT_PASSWORD:-cortex_dev_root}',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  cortex_mysql_data:
