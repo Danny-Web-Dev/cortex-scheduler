@@ -16,7 +16,7 @@ export const DashboardPage = () => {
 
   return (
     <div className="space-y-10">
-      <section className="rounded-[var(--radius-card)] bg-gradient-to-br from-brand-600 to-brand-700 px-6 py-8 text-white">
+      <section className="rounded-card bg-linear-to-br from-brand-600 to-brand-700 px-6 py-8 text-white">
         <p className="text-sm text-brand-100">Welcome back</p>
         <h1 className="mt-1 text-2xl font-bold">{user?.phone}</h1>
         <p className="mt-2 max-w-lg text-sm text-brand-50">
