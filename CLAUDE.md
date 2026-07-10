@@ -50,11 +50,25 @@ export type CreateAppointmentInput = z.infer<typeof CreateAppointmentSchema>;
 
 ### Architecture & layering
 
-- **One module per domain:** `auth`, `specialties`, `doctors`, `appointments`. A module owns its controller, service, and domain exceptions.
-- **Controllers do controller things only:** declare the route, apply guards/decorators, receive the validated DTO, call ONE service method, return its result. No business logic, no data shaping, no try/catch, no Prisma access — ever.
-- **All business logic lives in the service layer.** If a controller method is more than ~5 lines, logic has leaked into it.
-- **Module boundaries are real:** a module needs another module's capability → import the *module* and inject its exported *service*. Never deep-import another module's internals (`../doctors/doctors.service` from inside `appointments` is wrong; inject `DoctorsService` via DI).
-- **Dependency injection everywhere.** Never instantiate services with `new`; never import singletons directly.
+The API is organized by **technical layer**, one folder per responsibility. Each folder has a barrel `index.ts` and cross-layer imports go through it (`../services`, `../repositories`, `../utils`), never deep paths.
+
+```
+src/
+├── config/         # Zod-validated env + typed ConfigService (sole reader of process.env)
+├── models/         # Prisma access: PrismaService, entity type re-exports, health indicator
+├── repositories/   # Data-access layer — the ONLY place Prisma queries live
+├── services/       # Business logic (the brain) — orchestrates repositories + transactions
+├── controllers/    # HTTP layer — route decorators, guards, one service call
+├── dtos/           # nestjs-zod request DTOs (validation from shared Zod schemas)
+├── middlewares/    # JwtAuthGuard, @CurrentUser, global exception filter
+├── utils/          # Pure helpers: crypto, slot engine, constants, mappers, domain exceptions
+└── *.module.ts     # NestJS wiring at the src root (auth, doctors, appointments, …)
+```
+
+- **Controllers do controller things only:** declare the route, apply guards/decorators, receive the validated DTO, call ONE service method, return its result. No business logic, no data shaping, no try/catch, no data access — ever.
+- **All business logic lives in the service layer.** If a controller method is more than ~5 lines, logic has leaked into it. Services never touch Prisma directly — they call repositories (and open `prisma.$transaction` only to orchestrate a multi-repository write, passing the `tx` executor down).
+- **Repositories are the data-access layer.** Every Prisma query lives in a repository method; they take an optional `PrismaExecutor` so a caller can run them inside an open transaction. Repositories return entities/rows, never HTTP concerns.
+- **Cross-feature capability → inject the exported service via DI** (import the module that exports it). Never deep-import another feature's internals; never instantiate with `new`.
 - **Config:** one Zod-validated, typed config service loaded at bootstrap (fail fast on missing env). `process.env` is never accessed anywhere else.
 
 ### Error handling
@@ -66,9 +80,9 @@ export type CreateAppointmentInput = z.infer<typeof CreateAppointmentSchema>;
 
 ### Data & Prisma
 
-- Prisma is accessed **only through a single `PrismaService`**, injected into services. Never in controllers, guards, or pipes.
-- **Multi-step writes always inside `prisma.$transaction`.**
-- **Services never return Prisma models to controllers.** Map to response DTOs (Zod-parsed shapes from `packages/shared`) — the DB schema never leaks into the API contract.
+- Prisma is accessed **only through the `repositories/` layer** (which injects a single `PrismaService` from `models/`). Never query Prisma from controllers, services, guards, or pipes — go through a repository.
+- **Multi-step writes always inside `prisma.$transaction`.** The service opens the transaction and passes the `tx` executor into each repository call so they enlist in it.
+- **Services never return raw entities to controllers.** Map to response DTOs (shapes from `packages/shared`) — the DB schema never leaks into the API contract.
 - Expected constraint violations (P2002 on hold insert) are caught in the service and rethrown as domain exceptions.
 
 ### Domain rules
