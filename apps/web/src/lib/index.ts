@@ -7,3 +7,4 @@ export * from './query-keys';
 export * from './api/auth';
 export * from './api/catalog';
 export * from './api/appointments';
+export * from './api/search';

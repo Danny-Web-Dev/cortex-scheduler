@@ -9,6 +9,7 @@ import { AuthModule } from './auth';
 import { SpecialtiesModule } from './specialties';
 import { DoctorsModule } from './doctors';
 import { AppointmentsModule } from './appointments';
+import { SearchModule } from './search/search.module';
 import { HealthModule } from './health/health.module';
 import { AllExceptionsFilter } from './common/filters';
 
@@ -35,6 +36,7 @@ const GLOBAL_THROTTLE_TTL_MS = 60_000;
     SpecialtiesModule,
     DoctorsModule,
     AppointmentsModule,
+    SearchModule,
     HealthModule,
   ],
   providers: [
