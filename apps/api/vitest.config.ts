@@ -14,7 +14,7 @@ export default defineConfig({
     }),
   ],
   test: {
-    include: ['src/**/*.test.ts'],
+    include: ['tests/**/*.test.ts'],
     environment: 'node',
     passWithNoTests: true,
   },

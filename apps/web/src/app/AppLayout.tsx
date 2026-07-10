@@ -16,11 +16,11 @@ export const AppLayout = () => {
   return (
     <div className="min-h-full">
       <header className="border-b border-ink-200 bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-y-2 px-4 py-3">
           <Link to="/dashboard" className="text-lg font-bold text-brand-700">
             Cortex
           </Link>
-          <nav className="flex items-center gap-1">
+          <nav className="order-last flex w-full items-center gap-1 sm:order-none sm:w-auto">
             {NAV.map((item) => {
               const active = pathname.startsWith(item.match ?? item.to);
               return (
