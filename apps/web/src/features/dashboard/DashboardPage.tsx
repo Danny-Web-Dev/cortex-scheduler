@@ -3,6 +3,7 @@ import type { Specialty } from '@cortex/shared';
 import { Button, Skeleton } from '@/components/ui';
 import { useAuth } from '@/hooks';
 import { SpecialtiesGrid } from '@/features/catalog';
+import { SearchBar } from '@/features/search';
 import { AppointmentList, useMyAppointments } from '@/features/appointments';
 
 export const DashboardPage = () => {
@@ -42,6 +43,13 @@ export const DashboardPage = () => {
           <AppointmentList scope="upcoming" emptyTitle="No upcoming appointments" />
         </section>
       )}
+
+      <section>
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-500">
+          Find care
+        </h2>
+        <SearchBar />
+      </section>
 
       <section>
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-500">

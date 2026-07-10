@@ -6,4 +6,5 @@ export const queryKeys = {
   doctors: (specialtyId: string) => ['specialties', specialtyId, 'doctors'] as const,
   slots: (doctorId: string, date: string) => ['doctors', doctorId, 'slots', date] as const,
   myAppointments: (scope: AppointmentScope) => ['me', 'appointments', scope] as const,
+  search: (q: string) => ['search', q] as const,
 };
