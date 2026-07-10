@@ -18,7 +18,7 @@ export const BookingLayout = () => {
   return (
     <BookingContext.Provider value={{ heldAppointment, setHeldAppointment }}>
       <div className="space-y-8">
-        <ol className="flex items-center gap-2 text-sm">
+        <ol className="flex items-center justify-center gap-4 text-sm">
           {STEPS.map((step, i) => {
             const done = i < activeIndex;
             const active = i === activeIndex;

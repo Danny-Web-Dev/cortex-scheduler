@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { RequestOtpSchema, VerifyOtpSchema } from '@cortex/shared';
+import { RequestOtpSchema, VerifyOtpSchema, normalizePhone } from '@cortex/shared';
 import { ApiError, authStore, requestOtp, verifyOtp } from '@/lib';
 
 type Step = 'phone' | 'code';
@@ -31,9 +31,10 @@ export const useOtpLogin = () => {
 
   const submitPhone = (value: string) => {
     const parsed = RequestOtpSchema.safeParse({ phone: value });
-    if (!parsed.success) return 'Enter a valid phone number (e.g. +972541234567)';
-    setPhone(value);
-    requestMutation.mutate(value);
+    if (!parsed.success) return 'Enter a valid phone number (e.g. 054-1234567)';
+    const normalized = normalizePhone(value);
+    setPhone(normalized);
+    requestMutation.mutate(normalized);
     return null;
   };
 

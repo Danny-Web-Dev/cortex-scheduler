@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Button, Card, Input } from '@/components/ui';
+import { formatPhoneInput } from '@/lib';
 import { useOtpLogin } from './useOtpLogin';
 
 export const LoginPage = () => {
@@ -35,11 +36,11 @@ export const LoginPage = () => {
             <Input
               id="phone"
               label="Phone number"
-              placeholder="+972541234567"
+              placeholder="054-1234567"
               inputMode="tel"
               autoFocus
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => setPhone(formatPhoneInput(e.target.value))}
               error={localError ?? login.requestError ?? undefined}
             />
             <Button type="submit" loading={login.requesting} className="w-full">

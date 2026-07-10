@@ -12,8 +12,7 @@ export const DashboardPage = () => {
   const upcoming = useMyAppointments('upcoming');
   const hasUpcoming = (upcoming.data?.length ?? 0) > 0;
 
-  const goToDoctors = (specialty: Specialty) =>
-    navigate(`/book/doctor?specialtyId=${specialty.id}`);
+  const goToDoctors = (specialty: Specialty) => navigate(`/book/doctor?specialtyId=${specialty.id}`);
 
   return (
     <div className="space-y-10">

@@ -3,14 +3,32 @@ import { z } from 'zod';
 // E.164-ish: optional leading +, 7–15 digits.
 const PHONE_REGEX = /^\+?[1-9]\d{6,14}$/;
 const OTP_CODE_LENGTH = 6;
+const ISRAEL_COUNTRY_CODE = '972';
+
+// Accepts common local Israeli formats (0545836388, 054-5836388, 00972545836388)
+// alongside E.164, and normalizes all of them to canonical +972... form so the
+// API always stores/compares a single representation.
+export const normalizePhone = (raw: string): string => {
+  const stripped = raw.trim().replace(/[\s-()]/g, '');
+  if (stripped.startsWith('+')) return stripped;
+  if (stripped.startsWith('00')) return `+${stripped.slice(2)}`;
+  if (stripped.startsWith('0')) return `+${ISRAEL_COUNTRY_CODE}${stripped.slice(1)}`;
+  if (stripped.startsWith(ISRAEL_COUNTRY_CODE)) return `+${stripped}`;
+  return stripped;
+};
+
+const PhoneSchema = z.preprocess(
+  (val) => (typeof val === 'string' ? normalizePhone(val) : val),
+  z.string().regex(PHONE_REGEX, 'Invalid phone number'),
+);
 
 export const RequestOtpSchema = z.object({
-  phone: z.string().regex(PHONE_REGEX, 'Invalid phone number'),
+  phone: PhoneSchema,
 });
 export type RequestOtpInput = z.infer<typeof RequestOtpSchema>;
 
 export const VerifyOtpSchema = z.object({
-  phone: z.string().regex(PHONE_REGEX, 'Invalid phone number'),
+  phone: PhoneSchema,
   code: z.string().length(OTP_CODE_LENGTH).regex(/^\d+$/, 'Code must be digits'),
 });
 export type VerifyOtpInput = z.infer<typeof VerifyOtpSchema>;
