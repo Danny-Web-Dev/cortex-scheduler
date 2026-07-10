@@ -27,6 +27,29 @@ npm run start:dev -w apps/api
 
 Environment variables live in `apps/api/.env` (see `apps/api/.env.example`). The root `.env` (see `.env.example`) drives docker-compose.
 
+Interactive API docs (Swagger, generated from the shared Zod DTOs) are at `http://localhost:3000/docs`.
+
+## API testing
+
+A ready-to-run Postman collection lives at [postman/cortex-scheduler.postman_collection.json](postman/cortex-scheduler.postman_collection.json). It covers every endpoint and chains the whole demo flow with post-response scripts — no manual copying of tokens or ids.
+
+**Import into Postman:** File → Import → pick the JSON. The `baseUrl` variable defaults to `http://localhost:3000/api`. Use the Collection Runner (or just fire the requests top-to-bottom) — each request captures what the next one needs:
+
+1. **Auth** → Request OTP (generates a fresh random phone, captures the dev `devCode`) → Verify OTP (captures the access token; the refresh cookie is stored by Postman's cookie jar)
+2. **Specialties** → List Specialties (captures `specialtyId`) → List Doctors (captures `doctorId`)
+3. **Doctors** → Get Slots (computes next Monday, captures three free slots)
+4. **Appointments** → Hold → Confirm → Reschedule → Cancel → Hold again → Release
+5. **Me** → upcoming / past appointments
+6. **Health** → health check
+7. **Session** → Refresh (rotates the token) → Logout
+
+**Run it headless with [newman](https://github.com/postmanlabs/newman):**
+
+```bash
+npx newman run postman/cortex-scheduler.postman_collection.json
+# 16 requests, 29 assertions, all green against a seeded local API
+```
+
 ## Schema Decisions
 
 **UTC everywhere in the database and API.** `Appointment.startsAt` and all timestamps are stored and transmitted as UTC. Clinic-local availability (`DoctorAvailability.startTime`/`endTime`, stored as `"HH:mm"` strings with a `weekday` in Luxon's 1=Mon…7=Sun convention) is converted to concrete UTC instants per-date using Luxon and the `CLINIC_TZ` env var (`Asia/Jerusalem`). Doing the conversion per-date rather than storing fixed offsets keeps it DST-safe. Timezone localization for display happens only at the browser edge.
