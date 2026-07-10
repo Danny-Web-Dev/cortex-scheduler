@@ -1,2 +1,4 @@
-// Barrel: re-exports only. Hooks land here from Phase 4 onward.
-export {};
+export * from './useAuth';
+export * from './useHoldCountdown';
+export * from './useLogout';
+export * from './useSilentRefresh';

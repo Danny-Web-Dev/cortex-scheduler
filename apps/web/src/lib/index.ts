@@ -1,2 +1,9 @@
-// Barrel: re-exports only. API client and utilities land here from Phase 4 onward.
-export {};
+export * from './api-client';
+export * from './api-error';
+export * from './auth-store';
+export * from './env';
+export * from './format';
+export * from './query-keys';
+export * from './api/auth';
+export * from './api/catalog';
+export * from './api/appointments';

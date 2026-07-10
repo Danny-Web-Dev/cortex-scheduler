@@ -1,2 +1,8 @@
-// Barrel: re-exports only. UI primitives land here from Phase 4 onward.
-export {};
+export * from './Button';
+export * from './Card';
+export * from './EmptyState';
+export * from './ErrorState';
+export * from './Input';
+export * from './Skeleton';
+export * from './Spinner';
+export * from './Toast';
