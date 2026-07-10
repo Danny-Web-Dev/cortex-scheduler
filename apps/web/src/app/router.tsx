@@ -2,7 +2,13 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { LoginPage } from '@/features/auth';
 import { DashboardPage } from '@/features/dashboard';
 import { AppointmentsPage } from '@/features/appointments';
-import { BookingPlaceholder } from '@/features/booking/BookingPlaceholder';
+import {
+  BookingLayout,
+  ConfirmStep,
+  DoctorStep,
+  SlotStep,
+  SpecialtyStep,
+} from '@/features/booking';
 import { AppLayout } from './AppLayout';
 import { ProtectedRoute } from './ProtectedRoute';
 import { PublicOnlyRoute } from './PublicOnlyRoute';
@@ -20,7 +26,17 @@ export const router = createBrowserRouter([
         children: [
           { path: '/dashboard', element: <DashboardPage /> },
           { path: '/appointments', element: <AppointmentsPage /> },
-          { path: '/book/*', element: <BookingPlaceholder /> },
+          {
+            path: '/book',
+            element: <BookingLayout />,
+            children: [
+              { index: true, element: <Navigate to="/book/specialty" replace /> },
+              { path: 'specialty', element: <SpecialtyStep /> },
+              { path: 'doctor', element: <DoctorStep /> },
+              { path: 'slot', element: <SlotStep /> },
+              { path: 'confirm', element: <ConfirmStep /> },
+            ],
+          },
         ],
       },
     ],
