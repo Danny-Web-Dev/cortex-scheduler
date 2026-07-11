@@ -16,11 +16,11 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-full items-center justify-center px-4 py-12">
+    <div className="center-viewport px-4 py-12">
       <Card className="w-full max-w-md">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-brand-700">{t('app.brand')}</h1>
-          <p className="mt-1 text-sm text-ink-500">{subtitleByStep[login.step]}</p>
+          <p className="mt-1 text-subtitle">{subtitleByStep[login.step]}</p>
         </div>
 
         {login.step === 'phone' && (

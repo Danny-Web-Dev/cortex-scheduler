@@ -2,6 +2,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui';
 import { useAuth, useLogout } from '@/hooks';
+import { cx } from '@/lib';
 
 const NAV = [
   { to: '/dashboard', labelKey: 'app.nav.dashboard', match: '/dashboard' },
@@ -29,9 +30,10 @@ export const AppLayout = () => {
                 <Link
                   key={item.to}
                   to={item.to}
-                  className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
-                    active ? 'bg-brand-50 text-brand-700' : 'text-ink-600 hover:bg-ink-50'
-                  }`}
+                  className={cx(
+                    'rounded-lg px-3 py-1.5 text-sm font-medium transition',
+                    active ? 'bg-brand-50 text-brand-700' : 'text-ink-600 hover:bg-ink-50',
+                  )}
                 >
                   {t(item.labelKey)}
                 </Link>
@@ -39,9 +41,7 @@ export const AppLayout = () => {
             })}
           </nav>
           <div className="flex items-center gap-3">
-            <span className="hidden text-sm text-ink-500 sm:inline">
-              {user?.name ?? user?.phone}
-            </span>
+            <span className="hidden text-subtitle sm:inline">{user?.name ?? user?.phone}</span>
             <Button variant="ghost" onClick={logout}>
               {t('app.logout')}
             </Button>

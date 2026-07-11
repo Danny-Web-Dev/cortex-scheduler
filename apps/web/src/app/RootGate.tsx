@@ -9,7 +9,7 @@ export const RootGate = ({ children }: { children: ReactNode }) => {
 
   if (!ready) {
     return (
-      <div className="flex min-h-full items-center justify-center text-brand-600">
+      <div className="center-viewport text-brand-600">
         <Spinner size="lg" />
       </div>
     );

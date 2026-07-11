@@ -14,8 +14,8 @@ export const DoctorCard = ({ doctor, onSelect }: DoctorCardProps) => {
     <Card interactive onClick={() => onSelect(doctor)}>
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="font-semibold text-ink-900">{doctor.name}</p>
-          <p className="mt-1 text-sm text-ink-500">
+          <p className="text-title">{doctor.name}</p>
+          <p className="mt-1 text-subtitle">
             {t('booking.doctor.experience', { yearsExperience: doctor.yearsExperience })}
           </p>
         </div>
@@ -23,7 +23,7 @@ export const DoctorCard = ({ doctor, onSelect }: DoctorCardProps) => {
           {t('booking.doctor.rating', { rating: doctor.rating.toFixed(1) })}
         </Badge>
       </div>
-      {doctor.bio && <p className="mt-3 text-sm text-ink-500">{doctor.bio}</p>}
+      {doctor.bio && <p className="mt-3 text-subtitle">{doctor.bio}</p>}
     </Card>
   );
 };

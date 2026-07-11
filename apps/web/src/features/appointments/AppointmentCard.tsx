@@ -26,8 +26,8 @@ export const AppointmentCard = ({ appointment, actionable = false }: Appointment
     <Card>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="font-semibold text-ink-900">{appointment.doctorName}</p>
-          <p className="text-sm text-ink-500">{appointment.specialtyName}</p>
+          <p className="text-title">{appointment.doctorName}</p>
+          <p className="text-subtitle">{appointment.specialtyName}</p>
           <p className="mt-2 text-sm font-medium text-ink-700">
             {formatFullDateTime(appointment.startsAt)}
           </p>

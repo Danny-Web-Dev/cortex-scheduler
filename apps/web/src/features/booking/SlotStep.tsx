@@ -3,7 +3,7 @@ import { Navigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { SlotsResponse } from '@cortex/shared';
 import { EmptyState, Input, PageHeading, QueryState, SkeletonGrid, Spinner } from '@/components/ui';
-import { formatSlotTime } from '@/lib';
+import { cx, formatSlotTime } from '@/lib';
 import { useSlots } from './useSlots';
 import { useBookSlot } from './useBookSlot';
 
@@ -64,14 +64,14 @@ export const SlotStep = () => {
         }
       >
         {(data) => (
-          <div className={`${SLOTS_GRID_CLASS} ${query.isFetching ? 'opacity-60' : ''}`}>
+          <div className={cx(SLOTS_GRID_CLASS, query.isFetching && 'opacity-60')}>
             {data.slots.map((slot) => (
               <button
                 key={slot.startsAt}
                 type="button"
                 disabled={pending}
                 onClick={() => select(slot.startsAt)}
-                className="rounded-lg border border-ink-200 bg-white py-2.5 text-sm font-medium text-ink-800 transition hover:border-brand-400 hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-50"
+                className="surface-bordered py-2.5 text-sm font-medium text-ink-800 transition hover:border-brand-400 hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {formatSlotTime(slot.startsAt)}
               </button>

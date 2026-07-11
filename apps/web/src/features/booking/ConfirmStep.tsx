@@ -32,19 +32,19 @@ const ConfirmView = ({
         <dl className="space-y-3 text-sm">
           <div className="flex justify-between">
             <dt className="text-ink-500">{t('booking.confirm.doctor')}</dt>
-            <dd className="font-medium text-ink-900">{held.doctorName}</dd>
+            <dd className="text-title">{held.doctorName}</dd>
           </div>
           <div className="flex justify-between">
             <dt className="text-ink-500">{t('booking.confirm.specialty')}</dt>
-            <dd className="font-medium text-ink-900">{held.specialtyName}</dd>
+            <dd className="text-title">{held.specialtyName}</dd>
           </div>
           <div className="flex justify-between">
             <dt className="text-ink-500">{t('booking.confirm.when')}</dt>
-            <dd className="font-medium text-ink-900">{formatFullDateTime(held.startsAt)}</dd>
+            <dd className="text-title">{formatFullDateTime(held.startsAt)}</dd>
           </div>
           <div className="flex justify-between">
             <dt className="text-ink-500">{t('booking.confirm.durationLabel')}</dt>
-            <dd className="font-medium text-ink-900">
+            <dd className="text-title">
               {t('booking.confirm.duration', { durationMin: held.durationMin })}
             </dd>
           </div>

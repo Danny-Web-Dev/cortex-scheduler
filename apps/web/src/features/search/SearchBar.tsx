@@ -18,7 +18,7 @@ export const SearchBar = () => {
         onChange={(e) => onChange(e.target.value)}
         onFocusCapture={onFocus}
         onBlur={onBlur}
-        className="w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 pr-10 text-ink-900 placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
+        className="surface-bordered px-4 py-2.5 pr-10 text-ink-900 placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
       />
       {isFetching && (
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-500">
@@ -27,10 +27,8 @@ export const SearchBar = () => {
       )}
 
       {open && enabled && (data || showEmpty) && (
-        <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-lg border border-ink-200 bg-white shadow-lg">
-          {showEmpty && (
-            <p className="px-4 py-3 text-sm text-ink-500">{t('search.empty', { term })}</p>
-          )}
+        <div className="surface-bordered absolute z-20 mt-2 w-full overflow-hidden shadow-lg">
+          {showEmpty && <p className="px-4 py-3 text-subtitle">{t('search.empty', { term })}</p>}
 
           {data && data.specialties.length > 0 && (
             <SearchResultGroup

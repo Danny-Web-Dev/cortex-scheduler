@@ -12,8 +12,8 @@ export const SpecialtyCard = ({ specialty, onSelect }: SpecialtyCardProps) => {
 
   return (
     <Card interactive={Boolean(onSelect)} onClick={() => onSelect?.(specialty)}>
-      <p className="font-semibold text-ink-900">{specialty.name}</p>
-      <p className="mt-1 text-sm text-ink-500">{specialty.description}</p>
+      <p className="text-title">{specialty.name}</p>
+      <p className="mt-1 text-subtitle">{specialty.description}</p>
       <p className="mt-3 text-xs font-medium text-brand-600">
         {t('catalog.specialty.avgDuration', { avgDurationMin: specialty.avgDurationMin })}
       </p>
