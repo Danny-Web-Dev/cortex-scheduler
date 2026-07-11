@@ -8,7 +8,7 @@ import { AppointmentList, useMyAppointments } from '@/features/appointments';
 
 export const DashboardPage = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, justRegistered } = useAuth();
   const upcoming = useMyAppointments('upcoming');
   const hasUpcoming = (upcoming.data?.length ?? 0) > 0;
 
@@ -17,8 +17,8 @@ export const DashboardPage = () => {
   return (
     <div className="space-y-10">
       <section className="rounded-card bg-linear-to-br from-brand-600 to-brand-700 px-6 py-8 text-white">
-        <p className="text-sm text-brand-100">Welcome back</p>
-        <h1 className="mt-1 text-2xl font-bold">{user?.phone}</h1>
+        <p className="text-sm text-brand-100">{justRegistered ? 'Welcome' : 'Welcome back'}</p>
+        <h1 className="mt-1 text-2xl font-bold">{user?.name ?? user?.phone}</h1>
         <p className="mt-2 max-w-lg text-sm text-brand-50">
           {hasUpcoming
             ? 'Here is what’s coming up. You can reschedule or cancel any time.'

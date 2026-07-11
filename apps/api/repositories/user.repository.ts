@@ -6,11 +6,15 @@ import { PrismaService, type PrismaExecutor } from '../models';
 export class UserRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  upsertByPhone(phone: string, tx?: PrismaExecutor): Promise<User> {
-    return (tx ?? this.prisma).user.upsert({
-      where: { phone },
-      update: {},
-      create: { phone },
-    });
+  findByPhone(phone: string, tx?: PrismaExecutor): Promise<User | null> {
+    return (tx ?? this.prisma).user.findUnique({ where: { phone } });
+  }
+
+  createWithPhone(phone: string, tx?: PrismaExecutor): Promise<User> {
+    return (tx ?? this.prisma).user.create({ data: { phone } });
+  }
+
+  updateName(id: string, name: string, tx?: PrismaExecutor): Promise<User> {
+    return (tx ?? this.prisma).user.update({ where: { id }, data: { name } });
   }
 }

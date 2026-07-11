@@ -7,7 +7,7 @@ import {
   type SlotsResponse,
   type Specialty,
 } from '@cortex/shared';
-import { apiFetch } from '../api-client';
+import { apiFetch } from '@/lib';
 
 export const listSpecialties = async (): Promise<Specialty[]> => {
   const data = await apiFetch<unknown>('/specialties', { auth: false });

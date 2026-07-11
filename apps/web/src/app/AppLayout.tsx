@@ -20,7 +20,7 @@ export const AppLayout = () => {
           <Link to="/dashboard" className="text-lg font-bold text-brand-700">
             Cortex
           </Link>
-          <nav className="order-last flex w-full items-center gap-1 sm:order-none sm:w-auto">
+          <nav className="order-last flex w-full items-center gap-1 sm:order-0 sm:w-auto">
             {NAV.map((item) => {
               const active = pathname.startsWith(item.match ?? item.to);
               return (
@@ -37,7 +37,7 @@ export const AppLayout = () => {
             })}
           </nav>
           <div className="flex items-center gap-3">
-            <span className="hidden text-sm text-ink-500 sm:inline">{user?.phone}</span>
+            <span className="hidden text-sm text-ink-500 sm:inline">{user?.name ?? user?.phone}</span>
             <Button variant="ghost" onClick={logout}>
               Log out
             </Button>

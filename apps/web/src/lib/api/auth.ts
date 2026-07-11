@@ -1,10 +1,12 @@
 import {
   AuthTokensSchema,
   RequestOtpResponseSchema,
+  VerifyOtpResponseSchema,
   type AuthTokens,
   type RequestOtpInput,
   type RequestOtpResponse,
   type VerifyOtpInput,
+  type VerifyOtpResponse,
 } from '@cortex/shared';
 import { apiFetch } from '../api-client';
 
@@ -17,13 +19,13 @@ export const requestOtp = async (input: RequestOtpInput): Promise<RequestOtpResp
   return RequestOtpResponseSchema.parse(data);
 };
 
-export const verifyOtp = async (input: VerifyOtpInput): Promise<AuthTokens> => {
+export const verifyOtp = async (input: VerifyOtpInput): Promise<VerifyOtpResponse> => {
   const data = await apiFetch<unknown>('/auth/otp/verify', {
     method: 'POST',
     body: input,
     auth: false,
   });
-  return AuthTokensSchema.parse(data);
+  return VerifyOtpResponseSchema.parse(data);
 };
 
 export const refreshSession = async (): Promise<AuthTokens> => {

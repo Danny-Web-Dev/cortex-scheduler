@@ -1,15 +1,22 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { RequestOtpSchema, VerifyOtpSchema, normalizePhone } from '@cortex/shared';
-import { ApiError, authStore, requestOtp, verifyOtp } from '@/lib';
+import { RequestOtpSchema, UpdateProfileSchema, VerifyOtpSchema, normalizePhone } from '@cortex/shared';
+import { ApiError, authStore, requestOtp, updateProfile, verifyOtp } from '@/lib';
 
-type Step = 'phone' | 'code';
+type Step = 'phone' | 'code' | 'name';
 
 // Drives the two-step phone → OTP login. Components below only render its state.
+// A refreshed session that never finished registration resumes at the name step.
+const initialStep = (): Step => {
+  const { accessToken, user } = authStore.getState();
+  if (accessToken && user && !user.name) return 'name';
+  return 'phone';
+};
+
 export const useOtpLogin = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState<Step>('phone');
+  const [step, setStep] = useState<Step>(initialStep);
   const [phone, setPhone] = useState('');
   const [devCode, setDevCode] = useState<string | null>(null);
 
@@ -23,8 +30,21 @@ export const useOtpLogin = () => {
 
   const verifyMutation = useMutation({
     mutationFn: (code: string) => verifyOtp({ phone, code }),
-    onSuccess: (tokens) => {
-      authStore.setSession(tokens.accessToken, tokens.user);
+    onSuccess: (res) => {
+      authStore.setSession(res.accessToken, res.user);
+      if (res.isNewUser) {
+        setStep('name');
+        return;
+      }
+      navigate('/dashboard', { replace: true });
+    },
+  });
+
+  const nameMutation = useMutation({
+    mutationFn: (name: string) => updateProfile({ name }),
+    onSuccess: (user) => {
+      authStore.markJustRegistered();
+      authStore.setUser(user);
       navigate('/dashboard', { replace: true });
     },
   });
@@ -45,6 +65,13 @@ export const useOtpLogin = () => {
     return null;
   };
 
+  const submitName = (value: string) => {
+    const parsed = UpdateProfileSchema.safeParse({ name: value });
+    if (!parsed.success) return 'Enter your full name';
+    nameMutation.mutate(parsed.data.name);
+    return null;
+  };
+
   const resetToPhone = () => {
     setStep('phone');
     setDevCode(null);
@@ -60,10 +87,13 @@ export const useOtpLogin = () => {
     devCode,
     submitPhone,
     submitCode,
+    submitName,
     resetToPhone,
     requesting: requestMutation.isPending,
     verifying: verifyMutation.isPending,
+    savingName: nameMutation.isPending,
     requestError: errorOf(requestMutation.error),
     verifyError: errorOf(verifyMutation.error),
+    nameError: errorOf(nameMutation.error),
   };
 };

@@ -36,10 +36,13 @@ const makeOtpRow = (overrides: Partial<OtpRow> = {}): OtpRow => ({
   ...overrides,
 });
 
-const buildService = (otpRow: OtpRow | null) => {
+type ExistingUser = { id: string; phone: string; name: string | null } | null;
+
+const buildService = (otpRow: OtpRow | null, existingUser: ExistingUser = null) => {
   const setAttempts = vi.fn().mockResolvedValue(undefined);
   const consume = vi.fn().mockResolvedValue(undefined);
-  const upsertByPhone = vi.fn().mockResolvedValue({ id: 'user-1', phone: PHONE, name: null });
+  const findByPhone = vi.fn().mockResolvedValue(existingUser);
+  const createWithPhone = vi.fn().mockResolvedValue({ id: 'user-1', phone: PHONE, name: null });
 
   const prisma = {
     // The transaction just runs the callback with a throwaway tx handle.
@@ -54,26 +57,42 @@ const buildService = (otpRow: OtpRow | null) => {
     create: vi.fn(),
   } as unknown as OtpRepository;
 
-  const users = { upsertByPhone } as unknown as UserRepository;
+  const users = { findByPhone, createWithPhone } as unknown as UserRepository;
   const config = { isDevelopment: true } as unknown as ConfigService;
   const tokens = {
     issueAccessToken: vi.fn().mockReturnValue('access-token'),
     startFamily: vi.fn().mockResolvedValue({ token: 'refresh-token', expiresAt: new Date() }),
   } as unknown as TokenService;
 
-  return { service: new AuthService(prisma, config, tokens, otps, users), setAttempts, upsertByPhone };
+  return {
+    service: new AuthService(prisma, config, tokens, otps, users),
+    setAttempts,
+    findByPhone,
+    createWithPhone,
+  };
 };
 
 describe('AuthService.verifyOtp', () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it('issues tokens and upserts the user on a correct code', async () => {
-    const { service, upsertByPhone } = buildService(makeOtpRow());
+  it('creates the user and flags a new registration on a correct code', async () => {
+    const { service, createWithPhone } = buildService(makeOtpRow());
     const result = await service.verifyOtp({ phone: PHONE, code: VALID_CODE });
 
     expect(result.tokens.accessToken).toBe('access-token');
     expect(result.tokens.user.phone).toBe(PHONE);
-    expect(upsertByPhone).toHaveBeenCalledOnce();
+    expect(result.isNewUser).toBe(true);
+    expect(createWithPhone).toHaveBeenCalledOnce();
+  });
+
+  it('reuses the existing user and does not flag a new registration', async () => {
+    const existing = { id: 'user-9', phone: PHONE, name: 'Noa Levi' };
+    const { service, createWithPhone } = buildService(makeOtpRow(), existing);
+    const result = await service.verifyOtp({ phone: PHONE, code: VALID_CODE });
+
+    expect(result.isNewUser).toBe(false);
+    expect(result.tokens.user.name).toBe('Noa Levi');
+    expect(createWithPhone).not.toHaveBeenCalled();
   });
 
   it('rejects when no unconsumed code exists (reuse/consumed)', async () => {

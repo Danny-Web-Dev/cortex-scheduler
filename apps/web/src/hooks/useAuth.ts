@@ -7,5 +7,6 @@ export const useAuth = () => {
     user: state.user,
     accessToken: state.accessToken,
     isAuthenticated: state.accessToken !== null,
+    justRegistered: state.justRegistered,
   };
 };

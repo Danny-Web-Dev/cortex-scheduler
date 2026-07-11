@@ -2,7 +2,7 @@ import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res } from '@nestjs/
 import { Throttle } from '@nestjs/throttler';
 import { ApiTags } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
-import type { AuthTokens, RequestOtpResponse } from '@cortex/shared';
+import type { AuthTokens, RequestOtpResponse, VerifyOtpResponse } from '@cortex/shared';
 import { ConfigService } from '../config';
 import { AuthService } from '../services';
 import { RequestOtpDto, VerifyOtpDto } from '../dtos';
@@ -38,10 +38,10 @@ export class AuthController {
   async verifyOtp(
     @Body() dto: VerifyOtpDto,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<AuthTokens> {
+  ): Promise<VerifyOtpResponse> {
     const result = await this.auth.verifyOtp(dto);
     setRefreshCookie(res, result.refreshToken.token, !this.config.isDevelopment);
-    return result.tokens;
+    return { ...result.tokens, isNewUser: result.isNewUser };
   }
 
   @Post('refresh')

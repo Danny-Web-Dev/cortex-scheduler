@@ -7,6 +7,7 @@ export const LoginPage = () => {
   const login = useOtpLogin();
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
+  const [name, setName] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
 
   const onPhoneSubmit = (e: FormEvent) => {
@@ -19,16 +20,23 @@ export const LoginPage = () => {
     setLocalError(login.submitCode(code.trim()));
   };
 
+  const onNameSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    setLocalError(login.submitName(name.trim()));
+  };
+
+  const subtitleByStep: Record<typeof login.step, string> = {
+    phone: 'Sign in with your phone number',
+    code: `Enter the code sent to ${login.phone}`,
+    name: 'Welcome to Cortex! Tell us your name to finish signing up',
+  };
+
   return (
     <div className="flex min-h-full items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
         <div className="mb-6 text-center">
           <h1 className="text-2xl font-bold text-brand-700">Cortex</h1>
-          <p className="mt-1 text-sm text-ink-500">
-            {login.step === 'phone'
-              ? 'Sign in with your phone number'
-              : `Enter the code sent to ${login.phone}`}
-          </p>
+          <p className="mt-1 text-sm text-ink-500">{subtitleByStep[login.step]}</p>
         </div>
 
         {login.step === 'phone' && (
@@ -77,6 +85,24 @@ export const LoginPage = () => {
             >
               Use a different number
             </button>
+          </form>
+        )}
+
+        {login.step === 'name' && (
+          <form onSubmit={onNameSubmit} className="space-y-4">
+            <Input
+              id="name"
+              label="Your name"
+              placeholder="Noa Levi"
+              autoComplete="name"
+              autoFocus
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              error={localError ?? login.nameError ?? undefined}
+            />
+            <Button type="submit" loading={login.savingName} className="w-full">
+              Finish signing up
+            </Button>
           </form>
         )}
       </Card>

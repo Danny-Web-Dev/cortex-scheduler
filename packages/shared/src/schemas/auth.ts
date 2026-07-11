@@ -53,3 +53,17 @@ export const AuthTokensSchema = z.object({
   user: AuthUserSchema,
 });
 export type AuthTokens = z.infer<typeof AuthTokensSchema>;
+
+// Verify is the only auth response that knows whether the account was just created.
+export const VerifyOtpResponseSchema = AuthTokensSchema.extend({
+  isNewUser: z.boolean(),
+});
+export type VerifyOtpResponse = z.infer<typeof VerifyOtpResponseSchema>;
+
+const NAME_MIN_LENGTH = 2;
+const NAME_MAX_LENGTH = 50;
+
+export const UpdateProfileSchema = z.object({
+  name: z.string().trim().min(NAME_MIN_LENGTH, 'Name is too short').max(NAME_MAX_LENGTH),
+});
+export type UpdateProfileInput = z.infer<typeof UpdateProfileSchema>;

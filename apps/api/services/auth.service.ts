@@ -27,6 +27,8 @@ export type LoginResult = {
   refreshToken: IssuedRefreshToken;
 };
 
+export type VerifyResult = LoginResult & { isNewUser: boolean };
+
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
@@ -59,7 +61,7 @@ export class AuthService {
     };
   }
 
-  async verifyOtp(input: VerifyOtpInput): Promise<LoginResult> {
+  async verifyOtp(input: VerifyOtpInput): Promise<VerifyResult> {
     const record = await this.otps.findLatestUnconsumed(input.phone);
 
     if (!record) throw new OtpInvalidException();
@@ -73,9 +75,11 @@ export class AuthService {
       throw new OtpInvalidException();
     }
 
-    const user = await this.prisma.$transaction(async (tx) => {
+    const { user, isNewUser } = await this.prisma.$transaction(async (tx) => {
       await this.otps.consume(record.id, tx);
-      return this.users.upsertByPhone(input.phone, tx);
+      const existing = await this.users.findByPhone(input.phone, tx);
+      if (existing) return { user: existing, isNewUser: false };
+      return { user: await this.users.createWithPhone(input.phone, tx), isNewUser: true };
     });
 
     const accessToken = this.tokens.issueAccessToken(user);
@@ -87,6 +91,7 @@ export class AuthService {
         user: { id: user.id, phone: user.phone, name: user.name },
       },
       refreshToken,
+      isNewUser,
     };
   }
 

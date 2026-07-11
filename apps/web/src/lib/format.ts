@@ -30,13 +30,14 @@ export const formatCountdown = (totalSeconds: number): string => {
 };
 
 const LOCAL_PREFIX_LENGTH = 3;
+const LOCAL_MAX_DIGITS = 10;
 
 // Shapes raw keystrokes into 054-1234567 as the user types a local number,
 // while still letting them type +972... for the international form untouched.
 export const formatPhoneInput = (raw: string): string => {
   const allowed = raw.replace(/[^\d+-]/g, '');
   if (allowed.startsWith('+')) return allowed;
-  const digits = allowed.replace(/-/g, '');
+  const digits = allowed.replace(/-/g, '').slice(0, LOCAL_MAX_DIGITS);
   if (digits.length <= LOCAL_PREFIX_LENGTH) return digits;
   return `${digits.slice(0, LOCAL_PREFIX_LENGTH)}-${digits.slice(LOCAL_PREFIX_LENGTH)}`;
 };

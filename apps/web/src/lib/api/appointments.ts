@@ -6,7 +6,7 @@ import {
   type HoldAppointmentInput,
   type RescheduleAppointmentInput,
 } from '@cortex/shared';
-import { apiFetch } from '../api-client';
+import { apiFetch } from '@/lib';
 
 export const holdAppointment = async (input: HoldAppointmentInput): Promise<Appointment> => {
   const data = await apiFetch<unknown>('/appointments/hold', { method: 'POST', body: input });

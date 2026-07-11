@@ -8,3 +8,4 @@ export * from './api/auth';
 export * from './api/catalog';
 export * from './api/appointments';
 export * from './api/search';
+export * from './api/users';

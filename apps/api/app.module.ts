@@ -8,6 +8,7 @@ import { PrismaModule } from './models';
 import { RepositoriesModule } from './repositories/repositories.module';
 import { AllExceptionsFilter } from './middlewares';
 import { AuthModule } from './auth.module';
+import { UsersModule } from './users.module';
 import { SpecialtiesModule } from './specialties.module';
 import { DoctorsModule } from './doctors.module';
 import { AppointmentsModule } from './appointments.module';
@@ -35,6 +36,7 @@ const GLOBAL_THROTTLE_TTL_MS = 60_000;
       { name: 'default', limit: GLOBAL_THROTTLE_LIMIT, ttl: GLOBAL_THROTTLE_TTL_MS },
     ]),
     AuthModule,
+    UsersModule,
     SpecialtiesModule,
     DoctorsModule,
     AppointmentsModule,
