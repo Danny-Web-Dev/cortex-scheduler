@@ -6,9 +6,9 @@ import type {
   HoldAppointmentInput,
   RescheduleAppointmentInput,
 } from '@cortex/shared';
-import { PrismaService } from '../models';
-import { ConfigService } from '../config';
-import { AppointmentRepository } from '../repositories';
+import { PrismaService } from '@/models';
+import { ConfigService } from '@/config';
+import { AppointmentRepository } from '@/repositories';
 import {
   HOLD_TTL_MIN,
   HoldExpiredException,
@@ -19,7 +19,7 @@ import {
   isUniqueConstraintViolation,
   slotKeyFor,
   toAppointmentDto,
-} from '../utils';
+} from '@/utils';
 import { DoctorsService } from './doctors.service';
 
 const MS_PER_MIN = 60 * 1000;

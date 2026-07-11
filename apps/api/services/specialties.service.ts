@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { Doctor, Specialty } from '@cortex/shared';
-import { DoctorRepository, SpecialtyRepository } from '../repositories';
-import { NotFoundException } from '../utils';
+import { DoctorRepository, SpecialtyRepository } from '@/repositories';
+import { NotFoundException } from '@/utils';
 
 @Injectable()
 export class SpecialtiesService {

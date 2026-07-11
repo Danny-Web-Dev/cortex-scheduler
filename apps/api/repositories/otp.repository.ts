@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import type { OtpCode } from '../models';
-import { PrismaService } from '../models';
-import type { CreateOtp, PrismaExecutor } from '../types';
+import type { OtpCode } from '@/models';
+import { PrismaService } from '@/models';
+import type { CreateOtp, PrismaExecutor } from '@/types';
 
 @Injectable()
 export class OtpRepository {

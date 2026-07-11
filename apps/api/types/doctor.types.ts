@@ -1,4 +1,4 @@
-import type { Doctor, DoctorAvailability, Specialty } from '../models';
+import type { Doctor, DoctorAvailability, Specialty } from '@/models';
 import type { Slot } from '@cortex/shared';
 
 export type DoctorWithSchedule = Doctor & {

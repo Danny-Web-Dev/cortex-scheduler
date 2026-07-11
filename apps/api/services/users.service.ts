@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthUser, UpdateProfileInput } from '@cortex/shared';
-import { UserRepository } from '../repositories';
+import { UserRepository } from '@/repositories';
 
 @Injectable()
 export class UsersService {

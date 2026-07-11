@@ -1,5 +1,5 @@
 import type { Appointment as AppointmentDto } from '@cortex/shared';
-import type { AppointmentWithRelations } from '../types';
+import type { AppointmentWithRelations } from '@/types';
 
 export const toAppointmentDto = (row: AppointmentWithRelations): AppointmentDto => ({
   id: row.id,

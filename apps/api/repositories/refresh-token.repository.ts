@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import type { RefreshToken, User } from '../models';
-import { PrismaService } from '../models';
-import type { CreateRefreshToken, PrismaExecutor } from '../types';
+import type { RefreshToken, User } from '@/models';
+import { PrismaService } from '@/models';
+import type { CreateRefreshToken, PrismaExecutor } from '@/types';
 
 @Injectable()
 export class RefreshTokenRepository {

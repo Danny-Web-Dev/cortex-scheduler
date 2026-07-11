@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
 import type { SlotsResponse } from '@cortex/shared';
-import { ConfigService } from '../config';
-import { AppointmentRepository, DoctorRepository } from '../repositories';
-import { NotFoundException, ValidationException, computeFreeSlots } from '../utils';
-import type { FreeSlotsContext } from '../types';
+import { ConfigService } from '@/config';
+import { AppointmentRepository, DoctorRepository } from '@/repositories';
+import { NotFoundException, ValidationException, computeFreeSlots } from '@/utils';
+import type { FreeSlotsContext } from '@/types';
 
 @Injectable()
 export class DoctorsService {

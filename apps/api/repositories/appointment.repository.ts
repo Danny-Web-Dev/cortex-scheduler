@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import type { Appointment, AppointmentStatus } from '../models';
-import { PrismaService } from '../models';
+import type { Appointment, AppointmentStatus } from '@/models';
+import { PrismaService } from '@/models';
 import type {
   AppointmentStatusUpdate,
   AppointmentWithRelations,
   CreateAppointment,
   PrismaExecutor,
   SlotOccupancy,
-} from '../types';
+} from '@/types';
 
 const ACTIVE_STATUSES: AppointmentStatus[] = ['HELD', 'CONFIRMED', 'COMPLETED'];
 

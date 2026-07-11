@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { HealthCheck, HealthCheckService, type HealthCheckResult } from '@nestjs/terminus';
-import { PrismaHealthIndicator } from '../models/prisma.health';
+import { PrismaHealthIndicator } from '@/models/prisma.health';
 
 @ApiTags('health')
 @Controller('health')

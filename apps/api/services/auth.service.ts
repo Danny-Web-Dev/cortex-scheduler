@@ -4,9 +4,9 @@ import type {
   RequestOtpResponse,
   VerifyOtpInput,
 } from '@cortex/shared';
-import { PrismaService } from '../models';
-import { ConfigService } from '../config';
-import { OtpRepository, UserRepository } from '../repositories';
+import { PrismaService } from '@/models';
+import { ConfigService } from '@/config';
+import { OtpRepository, UserRepository } from '@/repositories';
 import {
   OTP_MAX_ATTEMPTS,
   OTP_TTL_MIN,
@@ -16,9 +16,9 @@ import {
   generateOtpCode,
   safeHashEqual,
   sha256,
-} from '../utils';
+} from '@/utils';
 import { TokenService } from './token.service';
-import type { LoginResult, VerifyResult } from '../types';
+import type { LoginResult, VerifyResult } from '@/types';
 
 const MS_PER_MIN = 60 * 1000;
 

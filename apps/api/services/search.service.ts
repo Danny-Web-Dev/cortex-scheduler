@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type { SearchResult } from '@cortex/shared';
-import { DoctorRepository, SpecialtyRepository } from '../repositories';
+import { DoctorRepository, SpecialtyRepository } from '@/repositories';
 
 @Injectable()
 export class SearchService {

@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppointmentsService } from '../../services/appointments.service';
-import { HoldExpiredException, SlotTakenException, ValidationException } from '../../utils';
-import type { PrismaService } from '../../models';
-import type { ConfigService } from '../../config';
-import type { AppointmentRepository } from '../../repositories';
-import type { DoctorsService } from '../../services/doctors.service';
-import type { FreeSlotsContext } from '../../types';
+import { AppointmentsService } from '@/services/appointments.service';
+import { HoldExpiredException, SlotTakenException, ValidationException } from '@/utils';
+import type { PrismaService } from '@/models';
+import type { ConfigService } from '@/config';
+import type { AppointmentRepository } from '@/repositories';
+import type { DoctorsService } from '@/services/doctors.service';
+import type { FreeSlotsContext } from '@/types';
 
 const DOCTOR_ID = 'doctor-1';
 const SPECIALTY_ID = 'spec-1';

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import type { Doctor } from '../models';
-import { PrismaService } from '../models';
-import type { DoctorWithSchedule, DoctorWithSpecialtyName } from '../types';
+import type { Doctor } from '@/models';
+import { PrismaService } from '@/models';
+import type { DoctorWithSchedule, DoctorWithSpecialtyName } from '@/types';
 
 const SEARCH_LIMIT = 10;
 

@@ -1,9 +1,9 @@
 import { Injectable, type CanActivate, type ExecutionContext } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import type { Request } from 'express';
-import { ConfigService } from '../config';
-import { UnauthorizedException } from '../utils';
-import type { AuthenticatedUser, JwtPayload } from '../types';
+import { ConfigService } from '@/config';
+import { UnauthorizedException } from '@/utils';
+import type { AuthenticatedUser, JwtPayload } from '@/types';
 
 const BEARER_PREFIX = 'Bearer ';
 

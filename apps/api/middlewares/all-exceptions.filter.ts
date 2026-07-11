@@ -10,8 +10,8 @@ import { ThrottlerException } from '@nestjs/throttler';
 import { ZodValidationException } from 'nestjs-zod';
 import type { Response } from 'express';
 import type { ApiErrorBody, ErrorCode } from '@cortex/shared';
-import { DomainException } from '../utils';
-import type { ResolvedError } from '../types';
+import { DomainException } from '@/utils';
+import type { ResolvedError } from '@/types';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {

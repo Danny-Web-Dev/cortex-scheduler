@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { SearchService } from '../../services/search.service';
-import type { DoctorRepository, SpecialtyRepository } from '../../repositories';
+import { SearchService } from '@/services/search.service';
+import type { DoctorRepository, SpecialtyRepository } from '@/repositories';
 
 const buildService = (specialties: unknown[], doctors: unknown[]) => {
   const specialtySearch = vi.fn().mockResolvedValue(specialties);

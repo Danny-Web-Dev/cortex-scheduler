@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import type { SlotsResponse } from '@cortex/shared';
-import { DoctorsService } from '../services';
-import { SlotsQueryDto } from '../dtos';
+import { DoctorsService } from '@/services';
+import { SlotsQueryDto } from '@/dtos';
 
 @ApiTags('doctors')
 @Controller('doctors')

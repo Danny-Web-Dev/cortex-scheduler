@@ -1,8 +1,8 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import type { SearchResult } from '@cortex/shared';
-import { SearchService } from '../services';
-import { SearchQueryDto } from '../dtos';
+import { SearchService } from '@/services';
+import { SearchQueryDto } from '@/dtos';
 
 @ApiTags('search')
 @Controller('search')

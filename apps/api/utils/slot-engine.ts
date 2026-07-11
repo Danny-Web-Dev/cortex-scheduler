@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import type { Slot } from '@cortex/shared';
-import type { AvailabilityWindow, ComputeFreeSlotsArgs, OccupyingAppointment } from '../types';
+import type { AvailabilityWindow, ComputeFreeSlotsArgs, OccupyingAppointment } from '@/types';
 
 const isOccupying = (appt: OccupyingAppointment, now: Date): boolean => {
   if (appt.status === 'CONFIRMED') return true;

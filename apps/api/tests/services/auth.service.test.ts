@@ -1,16 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '@/services/auth.service';
 import {
   sha256,
   OTP_MAX_ATTEMPTS,
   OtpAttemptsExceededException,
   OtpExpiredException,
   OtpInvalidException,
-} from '../../utils';
-import type { PrismaService } from '../../models';
-import type { ConfigService } from '../../config';
-import type { OtpRepository, UserRepository } from '../../repositories';
-import type { TokenService } from '../../services/token.service';
+} from '@/utils';
+import type { PrismaService } from '@/models';
+import type { ConfigService } from '@/config';
+import type { OtpRepository, UserRepository } from '@/repositories';
+import type { TokenService } from '@/services/token.service';
 
 type OtpRow = {
   id: string;

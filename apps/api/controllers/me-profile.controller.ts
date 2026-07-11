@@ -1,10 +1,10 @@
 import { Body, Controller, Patch, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import type { AuthUser } from '@cortex/shared';
-import { CurrentUser, JwtAuthGuard } from '../middlewares';
-import type { AuthenticatedUser } from '../types';
-import { UsersService } from '../services';
-import { UpdateProfileDto } from '../dtos';
+import { CurrentUser, JwtAuthGuard } from '@/middlewares';
+import type { AuthenticatedUser } from '@/types';
+import { UsersService } from '@/services';
+import { UpdateProfileDto } from '@/dtos';
 
 @ApiTags('me')
 @ApiBearerAuth()

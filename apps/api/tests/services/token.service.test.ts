@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { TokenService } from '../../services/token.service';
-import { sha256, UnauthorizedException } from '../../utils';
-import type { PrismaService } from '../../models';
-import type { ConfigService } from '../../config';
-import type { RefreshTokenRepository } from '../../repositories';
+import { TokenService } from '@/services/token.service';
+import { sha256, UnauthorizedException } from '@/utils';
+import type { PrismaService } from '@/models';
+import type { ConfigService } from '@/config';
+import type { RefreshTokenRepository } from '@/repositories';
 import type { JwtService } from '@nestjs/jwt';
 
 type RefreshRow = {

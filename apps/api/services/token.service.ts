@@ -1,17 +1,17 @@
 import { randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../models';
-import { ConfigService } from '../config';
-import { RefreshTokenRepository } from '../repositories';
+import { PrismaService } from '@/models';
+import { ConfigService } from '@/config';
+import { RefreshTokenRepository } from '@/repositories';
 import {
   ACCESS_TOKEN_TTL,
   REFRESH_TOKEN_TTL_DAYS,
   UnauthorizedException,
   generateRefreshToken,
   sha256,
-} from '../utils';
-import type { IssuedRefreshToken, JwtPayload, RotatedTokens } from '../types';
+} from '@/utils';
+import type { IssuedRefreshToken, JwtPayload, RotatedTokens } from '@/types';
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 

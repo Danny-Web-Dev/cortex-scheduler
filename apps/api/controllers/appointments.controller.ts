@@ -1,10 +1,10 @@
 import {Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards,} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import type { Appointment } from '@cortex/shared';
-import { CurrentUser, JwtAuthGuard } from '../middlewares';
-import type { AuthenticatedUser } from '../types';
-import { AppointmentsService } from '../services';
-import { HoldAppointmentDto, RescheduleAppointmentDto } from '../dtos';
+import { CurrentUser, JwtAuthGuard } from '@/middlewares';
+import type { AuthenticatedUser } from '@/types';
+import { AppointmentsService } from '@/services';
+import { HoldAppointmentDto, RescheduleAppointmentDto } from '@/dtos';
 
 @ApiTags('appointments')
 @ApiBearerAuth()
