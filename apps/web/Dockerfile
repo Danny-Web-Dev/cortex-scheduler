@@ -1,5 +1,3 @@
-# Build context is the repo root (see apps/api/Dockerfile for why).
-
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json tsconfig.base.json ./

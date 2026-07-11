@@ -1,7 +1,3 @@
-# Build context is the repo root (this is an npm workspaces monorepo —
-# apps/api depends on packages/shared and the lockfile covers all workspaces).
-# docker-compose.yml sets `context: .` / `dockerfile: apps/api/Dockerfile`.
-
 FROM node:20-bookworm-slim AS deps
 RUN apt-get update && apt-get install -y --no-install-recommends openssl \
   && rm -rf /var/lib/apt/lists/*
@@ -30,8 +26,6 @@ COPY --from=build /app/packages/shared/dist ./packages/shared/dist
 COPY --from=build /app/apps/api/package.json ./apps/api/package.json
 COPY --from=build /app/apps/api/dist ./apps/api/dist
 COPY --from=build /app/apps/api/prisma ./apps/api/prisma
-# npm workspaces doesn't hoist every dependency to the root node_modules
-# (e.g. prisma/@prisma/client land here) — copy the workspace-local ones too.
 COPY --from=build /app/apps/api/node_modules ./apps/api/node_modules
 
 WORKDIR /app/apps/api
@@ -40,5 +34,4 @@ EXPOSE 3000
 HEALTHCHECK --interval=10s --timeout=5s --start-period=15s --retries=5 \
   CMD node -e "require('http').get('http://localhost:3000/api/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
 
-# Apply any pending migrations, then start the compiled server.
 CMD ["sh", "-c", "npm run prisma:deploy && node dist/main.js"]
