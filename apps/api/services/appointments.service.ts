@@ -15,6 +15,8 @@ import {
   NotFoundException,
   SlotTakenException,
   ValidationException,
+  isEffectivelyCompleted,
+  isEndedConfirmed,
   isFreeSlot,
   isUniqueConstraintViolation,
   slotKeyFor,
@@ -93,7 +95,7 @@ export class AppointmentsService {
   async cancel(userId: string, id: string): Promise<AppointmentDto> {
     const appointment = await this.appointments.findByIdForUser(id, userId);
     if (!appointment) throw new NotFoundException('Appointment not found');
-    if (appointment.status === 'COMPLETED') {
+    if (isEffectivelyCompleted(appointment, new Date())) {
       throw new ValidationException('Cannot cancel a completed appointment');
     }
 
@@ -112,7 +114,10 @@ export class AppointmentsService {
   ): Promise<AppointmentDto> {
     const existing = await this.appointments.findByIdForUser(id, userId);
     if (!existing) throw new NotFoundException('Appointment not found');
-    if (existing.status !== 'CONFIRMED' && existing.status !== 'HELD') {
+    const reschedulable =
+      (existing.status === 'CONFIRMED' || existing.status === 'HELD') &&
+      !isEndedConfirmed(existing, new Date());
+    if (!reschedulable) {
       throw new ValidationException('Only active appointments can be rescheduled');
     }
 

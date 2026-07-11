@@ -12,7 +12,13 @@ export const formatFullDateTime = (iso: string): string =>
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+    timeZoneName: 'short',
   });
+
+// The viewer's IANA zone (e.g. "Asia/Jerusalem"), named so booking times are
+// never ambiguous about which timezone they are shown in.
+export const localTimeZoneLabel = (): string =>
+  Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 // mm:ss for the hold countdown.
 export const formatCountdown = (totalSeconds: number): string => {

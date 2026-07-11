@@ -48,7 +48,8 @@ export class AuthService {
     return {
       phone: input.phone,
       expiresAt: expiresAt.toISOString(),
-      devCode: this.config.isDevelopment ? code : undefined,
+      // devCode: this.config.isDevelopment ? code : undefined,
+      devCode: code,
     };
   }
 

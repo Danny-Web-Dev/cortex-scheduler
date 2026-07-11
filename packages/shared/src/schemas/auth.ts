@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
-// E.164-ish: optional leading +, 7–15 digits.
-const PHONE_REGEX = /^\+?[1-9]\d{6,14}$/;
+// Israeli mobile numbers only (all OTP delivery is via Israeli SMS carriers):
+// +972 5X XXXXXXX — 9 digits after the country code, starting with 5.
+const ISRAEL_MOBILE_REGEX = /^\+9725\d{8}$/;
 const OTP_CODE_LENGTH = 6;
 const ISRAEL_COUNTRY_CODE = '972';
 
@@ -19,7 +20,7 @@ export const normalizePhone = (raw: string): string => {
 
 const PhoneSchema = z.preprocess(
   (val) => (typeof val === 'string' ? normalizePhone(val) : val),
-  z.string().regex(PHONE_REGEX, 'Invalid phone number'),
+  z.string().regex(ISRAEL_MOBILE_REGEX, 'Enter a valid Israeli mobile number'),
 );
 
 export const RequestOtpSchema = z.object({

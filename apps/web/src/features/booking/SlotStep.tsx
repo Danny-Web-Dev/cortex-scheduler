@@ -3,7 +3,7 @@ import { Navigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { SlotsResponse } from '@cortex/shared';
 import { EmptyState, Input, PageHeading, QueryState, SkeletonGrid, Spinner } from '@/components/ui';
-import { cx, formatSlotTime } from '@/lib';
+import { cx, formatSlotTime, localTimeZoneLabel } from '@/lib';
 import { useSlots } from './useSlots';
 import { useBookSlot } from './useBookSlot';
 
@@ -31,7 +31,7 @@ export const SlotStep = () => {
     <div>
       <PageHeading
         title={rescheduleId ? t('booking.slot.titleReschedule') : t('booking.slot.title')}
-        subtitle={t('booking.slot.subtitle')}
+        subtitle={t('booking.slot.subtitle', { tz: localTimeZoneLabel() })}
       />
 
       <div className="mb-6 max-w-xs">

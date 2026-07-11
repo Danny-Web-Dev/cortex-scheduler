@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { Specialty } from '@cortex/shared';
 import { Button, SectionHeading, Skeleton } from '@/components/ui';
@@ -13,6 +13,8 @@ export const DashboardPage = () => {
   const { user, justRegistered } = useAuth();
   const upcoming = useMyAppointments('upcoming');
   const hasUpcoming = (upcoming.data?.length ?? 0) > 0;
+  const past = useMyAppointments('past');
+  const hasPast = (past.data?.length ?? 0) > 0;
 
   const goToDoctors = (specialty: Specialty) =>
     navigate(`/book/doctor?specialtyId=${specialty.id}`);
@@ -37,6 +39,21 @@ export const DashboardPage = () => {
         <section>
           <SectionHeading>{t('dashboard.upcoming')}</SectionHeading>
           <AppointmentList scope="upcoming" emptyTitle={t('appointments.emptyUpcomingTitle')} />
+        </section>
+      )}
+
+      {hasPast && (
+        <section>
+          <div className="flex items-baseline justify-between">
+            <SectionHeading>{t('dashboard.recentVisits')}</SectionHeading>
+            <Link
+              to="/appointments"
+              className="text-sm font-medium text-brand-600 hover:text-brand-700"
+            >
+              {t('dashboard.viewAllAppointments')}
+            </Link>
+          </div>
+          <AppointmentList scope="past" limit={3} emptyTitle={t('appointments.emptyPastTitle')} />
         </section>
       )}
 

@@ -1,5 +1,6 @@
 import type { Appointment as AppointmentDto } from '@cortex/shared';
 import type { AppointmentWithRelations } from '@/types';
+import { effectiveStatus } from './appointment-status';
 
 export const toAppointmentDto = (row: AppointmentWithRelations): AppointmentDto => ({
   id: row.id,
@@ -9,7 +10,7 @@ export const toAppointmentDto = (row: AppointmentWithRelations): AppointmentDto 
   specialtyName: row.specialty.name,
   startsAt: row.startsAt.toISOString(),
   durationMin: row.durationMin,
-  status: row.status,
+  status: effectiveStatus(row, new Date()),
   holdExpiresAt: row.holdExpiresAt ? row.holdExpiresAt.toISOString() : null,
   notes: row.notes,
 });

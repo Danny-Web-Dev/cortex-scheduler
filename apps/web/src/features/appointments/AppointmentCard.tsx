@@ -32,7 +32,9 @@ export const AppointmentCard = ({ appointment, actionable = false }: Appointment
             {formatFullDateTime(appointment.startsAt)}
           </p>
         </div>
-        <Badge tone={STATUS_TONE[appointment.status]}>{appointment.status}</Badge>
+        <Badge tone={STATUS_TONE[appointment.status]}>
+          {t(`appointments.status.${appointment.status}`)}
+        </Badge>
       </div>
 
       {actionable && (

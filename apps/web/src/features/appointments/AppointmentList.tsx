@@ -10,9 +10,15 @@ type AppointmentListProps = {
   scope: AppointmentScope;
   emptyTitle: string;
   emptyDescription?: string;
+  limit?: number;
 };
 
-export const AppointmentList = ({ scope, emptyTitle, emptyDescription }: AppointmentListProps) => {
+export const AppointmentList = ({
+  scope,
+  emptyTitle,
+  emptyDescription,
+  limit,
+}: AppointmentListProps) => {
   const { t } = useTranslation();
   const query = useMyAppointments(scope);
 
@@ -26,7 +32,7 @@ export const AppointmentList = ({ scope, emptyTitle, emptyDescription }: Appoint
     >
       {(data) => (
         <div className={LIST_GRID_CLASS}>
-          {data.map((appointment) => (
+          {(limit ? data.slice(0, limit) : data).map((appointment) => (
             <AppointmentCard
               key={appointment.id}
               appointment={appointment}

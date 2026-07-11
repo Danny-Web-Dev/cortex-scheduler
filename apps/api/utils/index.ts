@@ -4,5 +4,6 @@ export * from './crypto';
 export * from './prisma-errors';
 export * from './refresh-cookie';
 export * from './slot-engine';
+export * from './appointment-status';
 export * from './appointment.mapper';
 export * from './exceptions';
