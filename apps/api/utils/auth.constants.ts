@@ -9,6 +9,5 @@ export const REFRESH_TOKEN_BYTES = 32;
 export const REFRESH_COOKIE_NAME = 'cortex_refresh';
 export const REFRESH_COOKIE_PATH = '/api/auth';
 
-// Throttling for OTP endpoints: 5 requests per minute per IP.
 export const OTP_THROTTLE_LIMIT = 5;
 export const OTP_THROTTLE_TTL_MS = 60_000;

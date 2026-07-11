@@ -1,8 +1,6 @@
 import type { Appointment as AppointmentDto } from '@cortex/shared';
 import type { AppointmentWithRelations } from '../types';
 
-// Maps the Prisma row (with relations) to the shared response DTO. The DB shape
-// never leaves the service layer through this.
 export const toAppointmentDto = (row: AppointmentWithRelations): AppointmentDto => ({
   id: row.id,
   doctorId: row.doctorId,

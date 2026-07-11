@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { OtpCode } from '@prisma/client';
+import type { OtpCode } from '../models';
 import { PrismaService } from '../models';
 import type { CreateOtp, PrismaExecutor } from '../types';
 

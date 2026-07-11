@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { RefreshToken, User } from '@prisma/client';
+import type { RefreshToken, User } from '../models';
 import { PrismaService } from '../models';
 import type { CreateRefreshToken, PrismaExecutor } from '../types';
 

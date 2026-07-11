@@ -15,8 +15,6 @@ const REPOSITORIES = [
   AppointmentRepository,
 ];
 
-// Global so services inject repositories without every feature module
-// re-declaring the data-access layer.
 @Global()
 @Module({
   providers: REPOSITORIES,

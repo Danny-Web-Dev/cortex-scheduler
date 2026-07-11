@@ -45,7 +45,6 @@ const buildService = (otpRow: OtpRow | null, existingUser: ExistingUser = null) 
   const createWithPhone = vi.fn().mockResolvedValue({ id: 'user-1', phone: PHONE, name: null });
 
   const prisma = {
-    // The transaction just runs the callback with a throwaway tx handle.
     $transaction: vi.fn(async (cb: (tx: unknown) => Promise<unknown>) => cb({})),
   } as unknown as PrismaService;
 

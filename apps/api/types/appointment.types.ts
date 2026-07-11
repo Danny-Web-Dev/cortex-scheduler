@@ -1,4 +1,4 @@
-import type { Appointment, AppointmentStatus } from '@prisma/client';
+import type { Appointment, AppointmentStatus } from '../models';
 
 export type SlotOccupancy = Pick<Appointment, 'startsAt' | 'status' | 'holdExpiresAt'>;
 

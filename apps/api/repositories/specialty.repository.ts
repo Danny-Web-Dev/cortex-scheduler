@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { Specialty } from '@prisma/client';
+import type { Specialty } from '../models';
 import { PrismaService } from '../models';
 
 const SEARCH_LIMIT = 10;

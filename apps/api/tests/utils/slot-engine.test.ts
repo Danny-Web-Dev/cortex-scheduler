@@ -6,13 +6,11 @@ import type { AvailabilityWindow } from '../../types';
 const TZ = 'Asia/Jerusalem';
 const DURATION = 30;
 
-// Availability on the same weekday as `date`, so tests don't depend on calendars.
 const availabilityFor = (date: string, startTime = '09:00', endTime = '17:00'): AvailabilityWindow[] => {
   const weekday = DateTime.fromISO(date, { zone: TZ }).weekday;
   return [{ weekday, startTime, endTime }];
 };
 
-// A `now` safely before the given clinic date so no slot is filtered as past.
 const dayBefore = (date: string): Date =>
   DateTime.fromISO(date, { zone: TZ }).minus({ days: 1 }).toUTC().toJSDate();
 

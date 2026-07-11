@@ -81,7 +81,6 @@ export class AppointmentsService {
     return toAppointmentDto(updated);
   }
 
-  // Best-effort release when the user abandons the confirm step.
   async releaseHold(userId: string, id: string): Promise<void> {
     await this.appointments.deleteOwnHeld(id, userId);
   }
@@ -106,7 +105,6 @@ export class AppointmentsService {
     return toAppointmentDto(updated);
   }
 
-  // Reschedule = cancel the old slot + confirm the new one, atomically.
   async reschedule(
     userId: string,
     id: string,

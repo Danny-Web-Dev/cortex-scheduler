@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { Appointment, AppointmentStatus } from '@prisma/client';
+import type { Appointment, AppointmentStatus } from '../models';
 import { PrismaService } from '../models';
 import type {
   AppointmentStatusUpdate,

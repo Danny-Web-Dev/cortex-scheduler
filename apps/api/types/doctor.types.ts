@@ -1,4 +1,4 @@
-import type { Doctor, DoctorAvailability, Specialty } from '@prisma/client';
+import type { Doctor, DoctorAvailability, Specialty } from '../models';
 import type { Slot } from '@cortex/shared';
 
 export type DoctorWithSchedule = Doctor & {

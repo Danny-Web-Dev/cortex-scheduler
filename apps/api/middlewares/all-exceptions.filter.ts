@@ -13,9 +13,6 @@ import type { ApiErrorBody, ErrorCode } from '@cortex/shared';
 import { DomainException } from '../utils';
 import type { ResolvedError } from '../types';
 
-// One place that turns every thrown thing into { error: { code, message } }.
-// Services throw DomainExceptions; framework throws HttpExceptions; anything
-// unrecognized is a 500 whose real cause is logged but never leaked.
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   private readonly logger = new Logger(AllExceptionsFilter.name);
