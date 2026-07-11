@@ -33,11 +33,3 @@ export class UnauthorizedException extends DomainException {
     super(message);
   }
 }
-
-export class ForbiddenException extends DomainException {
-  readonly code: ErrorCode = 'FORBIDDEN';
-  readonly httpStatus = HttpStatus.FORBIDDEN;
-  constructor(message = 'Not allowed') {
-    super(message);
-  }
-}

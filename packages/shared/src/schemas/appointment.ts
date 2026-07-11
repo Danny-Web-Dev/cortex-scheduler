@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-export const APPOINTMENT_STATUSES = ['HELD', 'CONFIRMED', 'CANCELLED', 'COMPLETED'] as const;
-export const AppointmentStatusSchema = z.enum(APPOINTMENT_STATUSES);
+const APPOINTMENT_STATUSES = ['HELD', 'CONFIRMED', 'CANCELLED', 'COMPLETED'] as const;
+const AppointmentStatusSchema = z.enum(APPOINTMENT_STATUSES);
 export type AppointmentStatusValue = z.infer<typeof AppointmentStatusSchema>;
 
 // --- Catalog response DTOs ---
@@ -25,7 +25,7 @@ export const DoctorSchema = z.object({
 });
 export type Doctor = z.infer<typeof DoctorSchema>;
 
-export const SlotSchema = z.object({
+const SlotSchema = z.object({
   // UTC ISO start instant.
   startsAt: z.string().datetime(),
   durationMin: z.number().int(),
@@ -44,15 +44,13 @@ export type SlotsResponse = z.infer<typeof SlotsResponseSchema>;
 export const SlotsQuerySchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'date must be YYYY-MM-DD'),
 });
-export type SlotsQuery = z.infer<typeof SlotsQuerySchema>;
 
-export const AppointmentScopeSchema = z.enum(['upcoming', 'past']);
+const AppointmentScopeSchema = z.enum(['upcoming', 'past']);
 export type AppointmentScope = z.infer<typeof AppointmentScopeSchema>;
 
 export const MeAppointmentsQuerySchema = z.object({
   scope: AppointmentScopeSchema.default('upcoming'),
 });
-export type MeAppointmentsQuery = z.infer<typeof MeAppointmentsQuerySchema>;
 
 // --- Booking request DTOs ---
 
