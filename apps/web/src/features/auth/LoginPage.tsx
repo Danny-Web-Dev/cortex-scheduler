@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui';
 import { useOtpLogin } from './useOtpLogin';
 import { PhoneStepForm } from './PhoneStepForm';
@@ -5,19 +6,20 @@ import { CodeStepForm } from './CodeStepForm';
 import { NameStepForm } from './NameStepForm';
 
 export const LoginPage = () => {
+  const { t } = useTranslation();
   const login = useOtpLogin();
 
   const subtitleByStep: Record<typeof login.step, string> = {
-    phone: 'Sign in with your phone number',
-    code: `Enter the code sent to ${login.phone}`,
-    name: 'Welcome to Cortex! Tell us your name to finish signing up',
+    phone: t('auth.phone.subtitle'),
+    code: t('auth.code.subtitle', { phone: login.phone }),
+    name: t('auth.name.subtitle'),
   };
 
   return (
     <div className="flex min-h-full items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-brand-700">Cortex</h1>
+          <h1 className="text-2xl font-bold text-brand-700">{t('app.brand')}</h1>
           <p className="mt-1 text-sm text-ink-500">{subtitleByStep[login.step]}</p>
         </div>
 

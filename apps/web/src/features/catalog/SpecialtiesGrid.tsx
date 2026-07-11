@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { Specialty } from '@cortex/shared';
 import { EmptyState, QueryState, SkeletonGrid } from '@/components/ui';
 import { useSpecialties } from './useSpecialties';
@@ -10,15 +11,16 @@ type SpecialtiesGridProps = {
 };
 
 export const SpecialtiesGrid = ({ onSelect }: SpecialtiesGridProps) => {
+  const { t } = useTranslation();
   const query = useSpecialties();
 
   return (
     <QueryState
       query={query}
       skeleton={<SkeletonGrid count={6} itemClassName="h-32" className={SPECIALTIES_GRID_CLASS} />}
-      errorMessage="Could not load specialties."
+      errorMessage={t('catalog.error')}
       isEmpty={(data: Specialty[]) => data.length === 0}
-      empty={<EmptyState title="No specialties available" />}
+      empty={<EmptyState title={t('catalog.empty')} />}
     >
       {(data) => (
         <div className={SPECIALTIES_GRID_CLASS}>

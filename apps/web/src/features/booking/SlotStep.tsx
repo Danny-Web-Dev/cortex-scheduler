@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { SlotsResponse } from '@cortex/shared';
 import { EmptyState, Input, PageHeading, QueryState, SkeletonGrid, Spinner } from '@/components/ui';
 import { formatSlotTime } from '@/lib';
@@ -15,6 +16,7 @@ const tomorrowIso = (): string => {
 };
 
 export const SlotStep = () => {
+  const { t } = useTranslation();
   const [params] = useSearchParams();
   const doctorId = params.get('doctorId') ?? '';
   const rescheduleId = params.get('rescheduleId');
@@ -28,15 +30,15 @@ export const SlotStep = () => {
   return (
     <div>
       <PageHeading
-        title={rescheduleId ? 'Pick a new time' : 'Pick a time'}
-        subtitle="Times shown in your local timezone."
+        title={rescheduleId ? t('booking.slot.titleReschedule') : t('booking.slot.title')}
+        subtitle={t('booking.slot.subtitle')}
       />
 
       <div className="mb-6 max-w-xs">
         <Input
           id="date"
           type="date"
-          label="Date"
+          label={t('booking.slot.dateLabel')}
           value={date}
           min={new Date().toLocaleDateString('en-CA')}
           onChange={(e) => setDate(e.target.value)}
@@ -45,19 +47,19 @@ export const SlotStep = () => {
 
       {pending && (
         <div className="mb-4 flex items-center gap-2 text-sm text-brand-600">
-          <Spinner size="sm" /> Reserving your slot…
+          <Spinner size="sm" /> {t('booking.slot.reserving')}
         </div>
       )}
 
       <QueryState
         query={query}
         skeleton={<SkeletonGrid count={12} itemClassName="h-11" className={SLOTS_GRID_CLASS} />}
-        errorMessage="Could not load times."
+        errorMessage={t('booking.slot.error')}
         isEmpty={(data: SlotsResponse) => data.slots.length === 0}
         empty={
           <EmptyState
-            title="No open times on this day"
-            description="Try another date — doctors are available on weekdays."
+            title={t('booking.slot.emptyTitle')}
+            description={t('booking.slot.emptyDescription')}
           />
         }
       >

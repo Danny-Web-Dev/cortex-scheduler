@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { Appointment } from '@cortex/shared';
 import { BookingContext } from './booking-context';
 
 const STEPS = [
-  { path: '/book/specialty', label: 'Specialty' },
-  { path: '/book/doctor', label: 'Doctor' },
-  { path: '/book/slot', label: 'Time' },
-  { path: '/book/confirm', label: 'Confirm' },
-];
+  { path: '/book/specialty', labelKey: 'booking.steps.specialty' },
+  { path: '/book/doctor', labelKey: 'booking.steps.doctor' },
+  { path: '/book/slot', labelKey: 'booking.steps.time' },
+  { path: '/book/confirm', labelKey: 'booking.steps.confirm' },
+] as const;
 
 export const BookingLayout = () => {
+  const { t } = useTranslation();
   const [heldAppointment, setHeldAppointment] = useState<Appointment | null>(null);
   const { pathname } = useLocation();
   const activeIndex = STEPS.findIndex((s) => pathname.startsWith(s.path));
@@ -38,9 +40,11 @@ export const BookingLayout = () => {
                 <span
                   className={`hidden sm:inline ${active ? 'font-semibold text-ink-900' : 'text-ink-400'}`}
                 >
-                  {step.label}
+                  {t(step.labelKey)}
                 </span>
-                {i < STEPS.length - 1 && <span className="hidden sm:inline mx-1 text-ink-300">›</span>}
+                {i < STEPS.length - 1 && (
+                  <span className="hidden sm:inline mx-1 text-ink-300">›</span>
+                )}
               </li>
             );
           })}

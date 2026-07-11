@@ -1,4 +1,5 @@
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { Doctor } from '@cortex/shared';
 import { EmptyState, PageHeading, QueryState, SkeletonGrid } from '@/components/ui';
 import { useDoctors } from './useDoctors';
@@ -7,6 +8,7 @@ import { DoctorCard } from './DoctorCard';
 const DOCTORS_GRID_CLASS = 'grid gap-4 sm:grid-cols-2';
 
 export const DoctorStep = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const specialtyId = params.get('specialtyId') ?? '';
@@ -19,14 +21,14 @@ export const DoctorStep = () => {
 
   return (
     <div>
-      <PageHeading title="Choose a doctor" subtitle="All available in this specialty." />
+      <PageHeading title={t('booking.doctor.title')} subtitle={t('booking.doctor.subtitle')} />
 
       <QueryState
         query={query}
         skeleton={<SkeletonGrid count={4} itemClassName="h-32" className={DOCTORS_GRID_CLASS} />}
-        errorMessage="Could not load doctors."
+        errorMessage={t('booking.doctor.error')}
         isEmpty={(data: Doctor[]) => data.length === 0}
-        empty={<EmptyState title="No doctors in this specialty" />}
+        empty={<EmptyState title={t('booking.doctor.empty')} />}
       >
         {(data) => (
           <div className={DOCTORS_GRID_CLASS}>

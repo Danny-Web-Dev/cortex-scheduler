@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import { Spinner } from '@/components/ui';
 import { useSearchDropdown } from './useSearchDropdown';
 import { SearchResultGroup } from './SearchResultGroup';
 
 export const SearchBar = () => {
+  const { t } = useTranslation();
   const { term, open, data, isFetching, enabled, showEmpty, onChange, onFocus, onBlur, go } =
     useSearchDropdown();
 
@@ -11,7 +13,7 @@ export const SearchBar = () => {
       <input
         type="search"
         value={term}
-        placeholder="Search specialties or doctors…"
+        placeholder={t('search.placeholder')}
         aria-label="Search specialties or doctors"
         onChange={(e) => onChange(e.target.value)}
         onFocusCapture={onFocus}
@@ -26,11 +28,13 @@ export const SearchBar = () => {
 
       {open && enabled && (data || showEmpty) && (
         <div className="absolute z-20 mt-2 w-full overflow-hidden rounded-lg border border-ink-200 bg-white shadow-lg">
-          {showEmpty && <p className="px-4 py-3 text-sm text-ink-500">No matches for “{term}”.</p>}
+          {showEmpty && (
+            <p className="px-4 py-3 text-sm text-ink-500">{t('search.empty', { term })}</p>
+          )}
 
           {data && data.specialties.length > 0 && (
             <SearchResultGroup
-              label="Specialties"
+              label={t('search.specialties')}
               items={data.specialties}
               keyOf={(s) => s.id}
               onPick={(s) => go(`/book/doctor?specialtyId=${s.id}`)}
@@ -46,7 +50,7 @@ export const SearchBar = () => {
 
           {data && data.doctors.length > 0 && (
             <SearchResultGroup
-              label="Doctors"
+              label={t('search.doctors')}
               items={data.doctors}
               keyOf={(d) => d.id}
               onPick={(d) => go(`/book/slot?specialtyId=${d.specialtyId}&doctorId=${d.id}`)}
@@ -54,7 +58,10 @@ export const SearchBar = () => {
                 <>
                   <span className="font-medium text-ink-900">{d.name}</span>
                   <span className="ml-2 text-ink-400">
-                    {d.specialtyName} · ★ {d.rating.toFixed(1)}
+                    {t('search.doctorSubtitle', {
+                      specialtyName: d.specialtyName,
+                      rating: d.rating.toFixed(1),
+                    })}
                   </span>
                 </>
               )}

@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ApiError, holdAppointment, queryKeys, rescheduleAppointment } from '@/lib';
 import { useToast } from '@/components/ui';
 import { useBookingContext } from './booking-context';
@@ -15,6 +16,7 @@ type UseBookSlotArgs = {
 // A 409/validation means the slot was taken between load and click — toast and
 // refresh the grid.
 export const useBookSlot = ({ doctorId, date, rescheduleId }: UseBookSlotArgs) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { notify } = useToast();
@@ -24,8 +26,9 @@ export const useBookSlot = ({ doctorId, date, rescheduleId }: UseBookSlotArgs) =
     queryClient.invalidateQueries({ queryKey: queryKeys.slots(doctorId, date) });
 
   const onSlotConflict = (error: unknown) => {
-    const taken = error instanceof ApiError && (error.code === 'SLOT_TAKEN' || error.code === 'VALIDATION');
-    notify(taken ? 'That time was just taken — pick another.' : 'Could not reserve the slot.', 'error');
+    const taken =
+      error instanceof ApiError && (error.code === 'SLOT_TAKEN' || error.code === 'VALIDATION');
+    notify(taken ? t('booking.slot.takenToast') : t('booking.slot.reserveFailedToast'), 'error');
     void refreshSlots();
   };
 
@@ -41,7 +44,7 @@ export const useBookSlot = ({ doctorId, date, rescheduleId }: UseBookSlotArgs) =
   const reschedule = useMutation({
     mutationFn: (startsAt: string) => rescheduleAppointment(rescheduleId ?? '', { startsAt }),
     onSuccess: () => {
-      notify('Appointment rescheduled', 'success');
+      notify(t('booking.slot.rescheduledToast'), 'success');
       void queryClient.invalidateQueries({ queryKey: ['me', 'appointments'] });
       navigate('/appointments');
     },

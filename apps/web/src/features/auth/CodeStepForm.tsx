@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button, Callout, Input } from '@/components/ui';
 
 type CodeStepFormProps = {
@@ -16,6 +17,7 @@ export const CodeStepForm = ({
   onSubmit,
   onUseDifferentNumber,
 }: CodeStepFormProps) => {
+  const { t } = useTranslation();
   const [code, setCode] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
 
@@ -33,8 +35,8 @@ export const CodeStepForm = ({
       )}
       <Input
         id="code"
-        label="Verification code"
-        placeholder="123456"
+        label={t('auth.code.label')}
+        placeholder={t('auth.code.placeholder')}
         inputMode="numeric"
         maxLength={6}
         autoFocus
@@ -43,14 +45,14 @@ export const CodeStepForm = ({
         error={localError ?? error ?? undefined}
       />
       <Button type="submit" loading={loading} className="w-full">
-        Verify &amp; sign in
+        {t('auth.code.submit')}
       </Button>
       <button
         type="button"
         onClick={onUseDifferentNumber}
         className="w-full text-sm text-ink-500 hover:text-ink-700"
       >
-        Use a different number
+        {t('auth.code.useDifferentNumber')}
       </button>
     </form>
   );

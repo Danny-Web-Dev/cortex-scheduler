@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { Appointment, AppointmentStatusValue } from '@cortex/shared';
 import { Badge, Button, Card, type BadgeProps } from '@/components/ui';
 import { formatFullDateTime } from '@/lib';
@@ -17,6 +18,7 @@ type AppointmentCardProps = {
 };
 
 export const AppointmentCard = ({ appointment, actionable = false }: AppointmentCardProps) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { cancel } = useAppointmentActions();
 
@@ -37,16 +39,20 @@ export const AppointmentCard = ({ appointment, actionable = false }: Appointment
         <div className="mt-4 flex gap-2">
           <Button
             variant="secondary"
-            onClick={() => navigate(`/book/slot?rescheduleId=${appointment.id}&doctorId=${appointment.doctorId}&specialtyId=${appointment.specialtyId}`)}
+            onClick={() =>
+              navigate(
+                `/book/slot?rescheduleId=${appointment.id}&doctorId=${appointment.doctorId}&specialtyId=${appointment.specialtyId}`,
+              )
+            }
           >
-            Reschedule
+            {t('appointments.reschedule')}
           </Button>
           <Button
             variant="danger"
             loading={cancel.isPending}
             onClick={() => cancel.mutate(appointment.id)}
           >
-            Cancel
+            {t('appointments.cancel')}
           </Button>
         </div>
       )}

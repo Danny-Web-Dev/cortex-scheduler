@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import type { Appointment } from '@cortex/shared';
 import { ApiError, confirmAppointment, queryKeys, releaseHold } from '@/lib';
 import { useToast } from '@/components/ui';
@@ -9,6 +10,7 @@ import { useToast } from '@/components/ui';
 // away from /book/confirm rather than clearing the held appointment in place, so
 // ConfirmStep's "no hold" guard can't race the success redirect.
 export const useConfirmHold = (held: Appointment) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { notify } = useToast();
@@ -21,17 +23,20 @@ export const useConfirmHold = (held: Appointment) => {
   const confirm = useMutation({
     mutationFn: () => confirmAppointment(held.id),
     onSuccess: () => {
-      notify('Appointment confirmed', 'success');
+      notify(t('booking.confirm.confirmedToast'), 'success');
       void queryClient.invalidateQueries({ queryKey: queryKeys.myAppointments('upcoming') });
       navigate('/appointments');
     },
     onError: (error) => {
       if (error instanceof ApiError && error.code === 'HOLD_EXPIRED') {
-        notify('Your hold expired — please pick a time again.', 'error');
+        notify(t('booking.confirm.holdExpiredToast'), 'error');
         backToSlots();
         return;
       }
-      notify(error instanceof ApiError ? error.message : 'Could not confirm.', 'error');
+      notify(
+        error instanceof ApiError ? error.message : t('booking.confirm.confirmFailedToast'),
+        'error',
+      );
     },
   });
 

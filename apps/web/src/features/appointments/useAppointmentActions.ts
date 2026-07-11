@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { ApiError, cancelAppointment } from '@/lib';
 import { useToast } from '@/components/ui';
 
 export const useAppointmentActions = () => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { notify } = useToast();
 
@@ -11,11 +13,14 @@ export const useAppointmentActions = () => {
   const cancel = useMutation({
     mutationFn: (id: string) => cancelAppointment(id),
     onSuccess: () => {
-      notify('Appointment cancelled', 'success');
+      notify(t('appointments.cancelledToast'), 'success');
       void invalidate();
     },
     onError: (error) => {
-      notify(error instanceof ApiError ? error.message : 'Could not cancel', 'error');
+      notify(
+        error instanceof ApiError ? error.message : t('appointments.cancelFailedToast'),
+        'error',
+      );
     },
   });
 

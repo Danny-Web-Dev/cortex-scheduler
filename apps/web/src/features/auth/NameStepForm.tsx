@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button, Input } from '@/components/ui';
 
 type NameStepFormProps = {
@@ -8,6 +9,7 @@ type NameStepFormProps = {
 };
 
 export const NameStepForm = ({ loading, error, onSubmit }: NameStepFormProps) => {
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
 
@@ -20,8 +22,8 @@ export const NameStepForm = ({ loading, error, onSubmit }: NameStepFormProps) =>
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input
         id="name"
-        label="Your name"
-        placeholder="Noa Levi"
+        label={t('auth.name.label')}
+        placeholder={t('auth.name.placeholder')}
         autoComplete="name"
         autoFocus
         value={name}
@@ -29,7 +31,7 @@ export const NameStepForm = ({ loading, error, onSubmit }: NameStepFormProps) =>
         error={localError ?? error ?? undefined}
       />
       <Button type="submit" loading={loading} className="w-full">
-        Finish signing up
+        {t('auth.name.submit')}
       </Button>
     </form>
   );

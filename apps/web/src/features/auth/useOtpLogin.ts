@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { RequestOtpSchema, UpdateProfileSchema, VerifyOtpSchema, normalizePhone } from '@cortex/shared';
+import { useTranslation } from 'react-i18next';
+import {
+  RequestOtpSchema,
+  UpdateProfileSchema,
+  VerifyOtpSchema,
+  normalizePhone,
+} from '@cortex/shared';
 import { ApiError, authStore, requestOtp, updateProfile, verifyOtp } from '@/lib';
 
 type Step = 'phone' | 'code' | 'name';
@@ -15,6 +21,7 @@ const initialStep = (): Step => {
 };
 
 export const useOtpLogin = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>(initialStep);
   const [phone, setPhone] = useState('');
@@ -51,7 +58,7 @@ export const useOtpLogin = () => {
 
   const submitPhone = (value: string) => {
     const parsed = RequestOtpSchema.safeParse({ phone: value });
-    if (!parsed.success) return 'Enter a valid phone number (e.g. 054-1234567)';
+    if (!parsed.success) return t('auth.error.invalidPhone');
     const normalized = normalizePhone(value);
     setPhone(normalized);
     requestMutation.mutate(normalized);
@@ -60,14 +67,14 @@ export const useOtpLogin = () => {
 
   const submitCode = (value: string) => {
     const parsed = VerifyOtpSchema.safeParse({ phone, code: value });
-    if (!parsed.success) return 'Enter the 6-digit code';
+    if (!parsed.success) return t('auth.error.invalidCode');
     verifyMutation.mutate(value);
     return null;
   };
 
   const submitName = (value: string) => {
     const parsed = UpdateProfileSchema.safeParse({ name: value });
-    if (!parsed.success) return 'Enter your full name';
+    if (!parsed.success) return t('auth.error.invalidName');
     nameMutation.mutate(parsed.data.name);
     return null;
   };
@@ -79,7 +86,7 @@ export const useOtpLogin = () => {
   };
 
   const errorOf = (error: unknown): string | null =>
-    error instanceof ApiError ? error.message : error ? 'Request failed' : null;
+    error instanceof ApiError ? error.message : error ? t('auth.error.requestFailed') : null;
 
   return {
     step,

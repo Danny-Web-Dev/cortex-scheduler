@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { Appointment, AppointmentScope } from '@cortex/shared';
 import { EmptyState, QueryState, SkeletonGrid } from '@/components/ui';
 import { useMyAppointments } from './useMyAppointments';
@@ -12,13 +13,14 @@ type AppointmentListProps = {
 };
 
 export const AppointmentList = ({ scope, emptyTitle, emptyDescription }: AppointmentListProps) => {
+  const { t } = useTranslation();
   const query = useMyAppointments(scope);
 
   return (
     <QueryState
       query={query}
       skeleton={<SkeletonGrid count={2} itemClassName="h-28" className={LIST_GRID_CLASS} />}
-      errorMessage="Could not load appointments."
+      errorMessage={t('appointments.error')}
       isEmpty={(data: Appointment[]) => data.length === 0}
       empty={<EmptyState title={emptyTitle} description={emptyDescription} />}
     >
