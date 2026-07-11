@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import type { Specialty } from '@cortex/shared';
+import { PageHeading } from '@/components/ui';
 import { SpecialtiesGrid } from '@/features/catalog';
 
 export const SpecialtyStep = () => {
@@ -9,8 +10,7 @@ export const SpecialtyStep = () => {
 
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-bold text-ink-900">Choose a specialty</h1>
-      <p className="mb-6 text-sm text-ink-500">What kind of care do you need?</p>
+      <PageHeading title="Choose a specialty" subtitle="What kind of care do you need?" />
       <SpecialtiesGrid onSelect={onSelect} />
     </div>
   );

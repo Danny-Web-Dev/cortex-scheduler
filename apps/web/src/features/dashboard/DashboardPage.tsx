@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import type { Specialty } from '@cortex/shared';
-import { Button, Skeleton } from '@/components/ui';
+import { Button, SectionHeading, Skeleton } from '@/components/ui';
 import { useAuth } from '@/hooks';
 import { SpecialtiesGrid } from '@/features/catalog';
 import { SearchBar } from '@/features/search';
@@ -36,24 +36,18 @@ export const DashboardPage = () => {
       {upcoming.isPending && <Skeleton className="h-28" />}
       {hasUpcoming && (
         <section>
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-500">
-            Upcoming
-          </h2>
+          <SectionHeading>Upcoming</SectionHeading>
           <AppointmentList scope="upcoming" emptyTitle="No upcoming appointments" />
         </section>
       )}
 
       <section>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-500">
-          Find care
-        </h2>
+        <SectionHeading>Find care</SectionHeading>
         <SearchBar />
       </section>
 
       <section>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-500">
-          Browse specialties
-        </h2>
+        <SectionHeading>Browse specialties</SectionHeading>
         <SpecialtiesGrid onSelect={goToDoctors} />
       </section>
     </div>

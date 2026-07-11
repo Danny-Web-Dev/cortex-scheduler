@@ -1,7 +1,9 @@
-import type { AppointmentScope } from '@cortex/shared';
-import { EmptyState, ErrorState, Skeleton } from '@/components/ui';
+import type { Appointment, AppointmentScope } from '@cortex/shared';
+import { EmptyState, QueryState, SkeletonGrid } from '@/components/ui';
 import { useMyAppointments } from './useMyAppointments';
 import { AppointmentCard } from './AppointmentCard';
+
+const LIST_GRID_CLASS = 'grid gap-3';
 
 type AppointmentListProps = {
   scope: AppointmentScope;
@@ -10,30 +12,27 @@ type AppointmentListProps = {
 };
 
 export const AppointmentList = ({ scope, emptyTitle, emptyDescription }: AppointmentListProps) => {
-  const { data, isPending, isError, refetch } = useMyAppointments(scope);
-
-  if (isPending) {
-    return (
-      <div className="grid gap-3">
-        <Skeleton className="h-28" />
-        <Skeleton className="h-28" />
-      </div>
-    );
-  }
-
-  if (isError) return <ErrorState message="Could not load appointments." onRetry={() => refetch()} />;
-
-  if (data.length === 0) return <EmptyState title={emptyTitle} description={emptyDescription} />;
+  const query = useMyAppointments(scope);
 
   return (
-    <div className="grid gap-3">
-      {data.map((appointment) => (
-        <AppointmentCard
-          key={appointment.id}
-          appointment={appointment}
-          actionable={scope === 'upcoming'}
-        />
-      ))}
-    </div>
+    <QueryState
+      query={query}
+      skeleton={<SkeletonGrid count={2} itemClassName="h-28" className={LIST_GRID_CLASS} />}
+      errorMessage="Could not load appointments."
+      isEmpty={(data: Appointment[]) => data.length === 0}
+      empty={<EmptyState title={emptyTitle} description={emptyDescription} />}
+    >
+      {(data) => (
+        <div className={LIST_GRID_CLASS}>
+          {data.map((appointment) => (
+            <AppointmentCard
+              key={appointment.id}
+              appointment={appointment}
+              actionable={scope === 'upcoming'}
+            />
+          ))}
+        </div>
+      )}
+    </QueryState>
   );
 };

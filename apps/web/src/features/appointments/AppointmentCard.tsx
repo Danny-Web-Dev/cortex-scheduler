@@ -1,14 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import type { Appointment, AppointmentStatusValue } from '@cortex/shared';
-import { Button, Card } from '@/components/ui';
+import { Badge, Button, Card, type BadgeProps } from '@/components/ui';
 import { formatFullDateTime } from '@/lib';
 import { useAppointmentActions } from './useAppointmentActions';
 
-const STATUS_BADGE: Record<AppointmentStatusValue, string> = {
-  HELD: 'bg-amber-100 text-amber-700',
-  CONFIRMED: 'bg-brand-100 text-brand-700',
-  CANCELLED: 'bg-ink-100 text-ink-500',
-  COMPLETED: 'bg-ink-100 text-ink-600',
+const STATUS_TONE: Record<AppointmentStatusValue, BadgeProps['tone']> = {
+  HELD: 'amber',
+  CONFIRMED: 'brand',
+  CANCELLED: 'neutral',
+  COMPLETED: 'neutral-strong',
 };
 
 type AppointmentCardProps = {
@@ -30,11 +30,7 @@ export const AppointmentCard = ({ appointment, actionable = false }: Appointment
             {formatFullDateTime(appointment.startsAt)}
           </p>
         </div>
-        <span
-          className={`rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_BADGE[appointment.status]}`}
-        >
-          {appointment.status}
-        </span>
+        <Badge tone={STATUS_TONE[appointment.status]}>{appointment.status}</Badge>
       </div>
 
       {actionable && (

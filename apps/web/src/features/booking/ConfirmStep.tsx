@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom';
-import { Button, Card } from '@/components/ui';
+import { Button, Callout, Card, PageHeading } from '@/components/ui';
 import { formatFullDateTime } from '@/lib';
 import { useHoldCountdown } from '@/hooks';
 import { useBookingContext } from './booking-context';
@@ -20,8 +20,10 @@ const ConfirmView = ({ held }: { held: NonNullable<ReturnType<typeof useBookingC
 
   return (
     <div className="mx-auto max-w-lg">
-      <h1 className="mb-1 text-2xl font-bold text-ink-900">Confirm your appointment</h1>
-      <p className="mb-6 text-sm text-ink-500">Review the details and confirm before the hold expires.</p>
+      <PageHeading
+        title="Confirm your appointment"
+        subtitle="Review the details and confirm before the hold expires."
+      />
 
       <Card>
         <dl className="space-y-3 text-sm">
@@ -45,13 +47,13 @@ const ConfirmView = ({ held }: { held: NonNullable<ReturnType<typeof useBookingC
       </Card>
 
       {isExpired ? (
-        <div className="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-center text-sm text-amber-800">
+        <Callout tone="amber" className="mt-5">
           Your hold expired. Please pick a time again.
-        </div>
+        </Callout>
       ) : (
-        <div className="mt-5 rounded-lg border border-brand-200 bg-brand-50 px-4 py-3 text-center text-sm text-brand-800">
+        <Callout tone="brand" className="mt-5">
           Slot held for <span className="font-mono font-bold">{label}</span>
-        </div>
+        </Callout>
       )}
 
       <div className="mt-6 flex gap-3">

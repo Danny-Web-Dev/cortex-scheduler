@@ -1,28 +1,10 @@
-import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Spinner } from '@/components/ui';
-import { useCatalogSearch } from './useCatalogSearch';
+import { useSearchDropdown } from './useSearchDropdown';
+import { SearchResultGroup } from './SearchResultGroup';
 
 export const SearchBar = () => {
-  const navigate = useNavigate();
-  const [term, setTerm] = useState('');
-  const [open, setOpen] = useState(false);
-  const blurTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const { data, isFetching, enabled } = useCatalogSearch(term);
-
-  const hasResults = Boolean(data && (data.specialties.length > 0 || data.doctors.length > 0));
-  const showEmpty = enabled && !isFetching && data && !hasResults;
-
-  // Delay close so a click on a result registers before blur hides the list.
-  const onBlur = () => {
-    blurTimer.current = setTimeout(() => setOpen(false), 150);
-  };
-  const go = (path: string) => {
-    if (blurTimer.current) clearTimeout(blurTimer.current);
-    setOpen(false);
-    setTerm('');
-    navigate(path);
-  };
+  const { term, open, data, isFetching, enabled, showEmpty, onChange, onFocus, onBlur, go } =
+    useSearchDropdown();
 
   return (
     <div className="relative">
@@ -31,11 +13,8 @@ export const SearchBar = () => {
         value={term}
         placeholder="Search specialties or doctors…"
         aria-label="Search specialties or doctors"
-        onChange={(e) => {
-          setTerm(e.target.value);
-          setOpen(true);
-        }}
-        onFocusCapture={() => setOpen(true)}
+        onChange={(e) => onChange(e.target.value)}
+        onFocusCapture={onFocus}
         onBlur={onBlur}
         className="w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 pr-10 text-ink-900 placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
       />
@@ -50,45 +29,36 @@ export const SearchBar = () => {
           {showEmpty && <p className="px-4 py-3 text-sm text-ink-500">No matches for “{term}”.</p>}
 
           {data && data.specialties.length > 0 && (
-            <div className="border-b border-ink-100">
-              <p className="px-4 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-ink-400">
-                Specialties
-              </p>
-              {data.specialties.map((s) => (
-                <button
-                  key={s.id}
-                  type="button"
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => go(`/book/doctor?specialtyId=${s.id}`)}
-                  className="block w-full px-4 py-2 text-left text-sm hover:bg-brand-50"
-                >
+            <SearchResultGroup
+              label="Specialties"
+              items={data.specialties}
+              keyOf={(s) => s.id}
+              onPick={(s) => go(`/book/doctor?specialtyId=${s.id}`)}
+              className="border-b border-ink-100"
+              renderItem={(s) => (
+                <>
                   <span className="font-medium text-ink-900">{s.name}</span>
                   <span className="ml-2 text-ink-400">{s.description}</span>
-                </button>
-              ))}
-            </div>
+                </>
+              )}
+            />
           )}
 
           {data && data.doctors.length > 0 && (
-            <div>
-              <p className="px-4 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-ink-400">
-                Doctors
-              </p>
-              {data.doctors.map((d) => (
-                <button
-                  key={d.id}
-                  type="button"
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => go(`/book/slot?specialtyId=${d.specialtyId}&doctorId=${d.id}`)}
-                  className="block w-full px-4 py-2 text-left text-sm hover:bg-brand-50"
-                >
+            <SearchResultGroup
+              label="Doctors"
+              items={data.doctors}
+              keyOf={(d) => d.id}
+              onPick={(d) => go(`/book/slot?specialtyId=${d.specialtyId}&doctorId=${d.id}`)}
+              renderItem={(d) => (
+                <>
                   <span className="font-medium text-ink-900">{d.name}</span>
                   <span className="ml-2 text-ink-400">
                     {d.specialtyName} · ★ {d.rating.toFixed(1)}
                   </span>
-                </button>
-              ))}
-            </div>
+                </>
+              )}
+            />
           )}
         </div>
       )}

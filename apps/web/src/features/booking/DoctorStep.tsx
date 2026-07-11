@@ -1,14 +1,16 @@
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import type { Doctor } from '@cortex/shared';
-import { EmptyState, ErrorState, Skeleton } from '@/components/ui';
+import { EmptyState, PageHeading, QueryState, SkeletonGrid } from '@/components/ui';
 import { useDoctors } from './useDoctors';
 import { DoctorCard } from './DoctorCard';
+
+const DOCTORS_GRID_CLASS = 'grid gap-4 sm:grid-cols-2';
 
 export const DoctorStep = () => {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const specialtyId = params.get('specialtyId') ?? '';
-  const { data, isPending, isError, refetch } = useDoctors(specialtyId);
+  const query = useDoctors(specialtyId);
 
   if (!specialtyId) return <Navigate to="/book/specialty" replace />;
 
@@ -17,25 +19,23 @@ export const DoctorStep = () => {
 
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-bold text-ink-900">Choose a doctor</h1>
-      <p className="mb-6 text-sm text-ink-500">All available in this specialty.</p>
+      <PageHeading title="Choose a doctor" subtitle="All available in this specialty." />
 
-      {isPending && (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-32" />
-          ))}
-        </div>
-      )}
-      {isError && <ErrorState message="Could not load doctors." onRetry={() => refetch()} />}
-      {data && data.length === 0 && <EmptyState title="No doctors in this specialty" />}
-      {data && data.length > 0 && (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {data.map((doctor) => (
-            <DoctorCard key={doctor.id} doctor={doctor} onSelect={onSelect} />
-          ))}
-        </div>
-      )}
+      <QueryState
+        query={query}
+        skeleton={<SkeletonGrid count={4} itemClassName="h-32" className={DOCTORS_GRID_CLASS} />}
+        errorMessage="Could not load doctors."
+        isEmpty={(data: Doctor[]) => data.length === 0}
+        empty={<EmptyState title="No doctors in this specialty" />}
+      >
+        {(data) => (
+          <div className={DOCTORS_GRID_CLASS}>
+            {data.map((doctor) => (
+              <DoctorCard key={doctor.id} doctor={doctor} onSelect={onSelect} />
+            ))}
+          </div>
+        )}
+      </QueryState>
     </div>
   );
 };
