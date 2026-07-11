@@ -1,15 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import type { Doctor, DoctorAvailability, Specialty } from '@prisma/client';
+import type { Doctor } from '@prisma/client';
 import { PrismaService } from '../models';
+import type { DoctorWithSchedule, DoctorWithSpecialtyName } from '../types';
 
 const SEARCH_LIMIT = 10;
-
-export type DoctorWithSchedule = Doctor & {
-  specialty: Specialty;
-  availability: DoctorAvailability[];
-};
-
-export type DoctorWithSpecialtyName = Doctor & { specialty: { name: string } };
 
 @Injectable()
 export class DoctorRepository {

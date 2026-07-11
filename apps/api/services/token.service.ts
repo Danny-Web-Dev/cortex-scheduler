@@ -11,20 +11,9 @@ import {
   generateRefreshToken,
   sha256,
 } from '../utils';
-import type { JwtPayload } from '../middlewares';
+import type { IssuedRefreshToken, JwtPayload, RotatedTokens } from '../types';
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
-
-export type IssuedRefreshToken = {
-  token: string;
-  expiresAt: Date;
-};
-
-export type RotatedTokens = {
-  accessToken: string;
-  refreshToken: IssuedRefreshToken;
-  user: { id: string; phone: string; name: string | null };
-};
 
 @Injectable()
 export class TokenService {
@@ -43,14 +32,10 @@ export class TokenService {
     });
   }
 
-  // Creates a brand-new token family (used at login).
   async startFamily(userId: string): Promise<IssuedRefreshToken> {
     return this.persistRefreshToken(userId, randomUUID());
   }
 
-  // Rotate a presented refresh token. Reuse of an already-revoked token means the
-  // token was stolen (the legitimate client already rotated it), so the whole
-  // family is revoked and the caller is rejected.
   async rotate(presentedToken: string): Promise<RotatedTokens> {
     const existing = await this.refreshTokens.findByHashWithUser(sha256(presentedToken));
 

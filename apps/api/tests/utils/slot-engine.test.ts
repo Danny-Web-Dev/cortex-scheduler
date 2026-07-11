@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import { describe, expect, it } from 'vitest';
-import { computeFreeSlots, isFreeSlot, type AvailabilityWindow } from '../../utils/slot-engine';
+import { computeFreeSlots, isFreeSlot } from '../../utils';
+import type { AvailabilityWindow } from '../../types';
 
 const TZ = 'Asia/Jerusalem';
 const DURATION = 30;

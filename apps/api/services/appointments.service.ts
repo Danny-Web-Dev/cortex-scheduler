@@ -151,8 +151,6 @@ export class AppointmentsService {
     }
   }
 
-  // Re-validate against freshly computed free slots — never trust the client's
-  // timestamp — and return the same context so callers don't recompute it.
   private async validateSlot(doctorId: string, startsAtIso: string) {
     const context = await this.doctors.computeFreeSlotsForDate(
       doctorId,

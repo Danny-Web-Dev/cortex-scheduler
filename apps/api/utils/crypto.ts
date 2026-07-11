@@ -14,7 +14,6 @@ export const sha256 = (value: string): string =>
 export const generateRefreshToken = (): string =>
   randomBytes(REFRESH_TOKEN_BYTES).toString('hex');
 
-// Constant-time compare of two hex-encoded hashes of equal length.
 export const safeHashEqual = (a: string, b: string): boolean => {
   if (a.length !== b.length) return false;
   return timingSafeEqual(Buffer.from(a), Buffer.from(b));

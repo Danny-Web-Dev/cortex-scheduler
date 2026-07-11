@@ -61,9 +61,12 @@ src/
 ├── controllers/    # HTTP layer — route decorators, guards, one service call
 ├── dtos/           # nestjs-zod request DTOs (validation from shared Zod schemas)
 ├── middlewares/    # JwtAuthGuard, @CurrentUser, global exception filter
+├── types/          # Hand-authored API-internal TS types (params, results, executor, …), grouped by domain
 ├── utils/          # Pure helpers: crypto, slot engine, constants, mappers, domain exceptions
 └── *.module.ts     # NestJS wiring at the src root (auth, doctors, appointments, …)
 ```
+
+- **Hand-authored TS types live in `types/`** (grouped by domain, one barrel `index.ts`), imported via `../types`. Prisma entity re-exports stay in `models/`, and Zod-inferred types (e.g. `Env`) stay co-located with their schema.
 
 - **Controllers do controller things only:** declare the route, apply guards/decorators, receive the validated DTO, call ONE service method, return its result. No business logic, no data shaping, no try/catch, no data access — ever.
 - **All business logic lives in the service layer.** If a controller method is more than ~5 lines, logic has leaked into it. Services never touch Prisma directly — they call repositories (and open `prisma.$transaction` only to orchestrate a multi-repository write, passing the `tx` executor down).

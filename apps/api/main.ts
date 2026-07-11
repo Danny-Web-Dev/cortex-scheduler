@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 import { cleanupOpenApiDoc } from 'nestjs-zod';
 import cookieParser from 'cookie-parser';
-import { AppModule } from './app.module';
+import { AppModule } from './modules/app.module';
 import { ConfigService } from './config';
 
 export const API_PREFIX = 'api';

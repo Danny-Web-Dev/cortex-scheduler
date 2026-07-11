@@ -1,6 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import type {
-  AuthTokens,
   RequestOtpInput,
   RequestOtpResponse,
   VerifyOtpInput,
@@ -18,16 +17,10 @@ import {
   safeHashEqual,
   sha256,
 } from '../utils';
-import { TokenService, type IssuedRefreshToken } from './token.service';
+import { TokenService } from './token.service';
+import type { LoginResult, VerifyResult } from '../types';
 
 const MS_PER_MIN = 60 * 1000;
-
-export type LoginResult = {
-  tokens: AuthTokens;
-  refreshToken: IssuedRefreshToken;
-};
-
-export type VerifyResult = LoginResult & { isNewUser: boolean };
 
 @Injectable()
 export class AuthService {
@@ -45,13 +38,11 @@ export class AuthService {
     const code = generateOtpCode();
     const expiresAt = new Date(Date.now() + OTP_TTL_MIN * MS_PER_MIN);
 
-    // Latest-code-wins: invalidate any outstanding codes for this phone.
     await this.prisma.$transaction(async (tx) => {
       await this.otps.invalidateActive(input.phone, tx);
       await this.otps.create({ phone: input.phone, codeHash: sha256(code), expiresAt }, tx);
     });
 
-    // Never send SMS — always log; only surface the code in the response in dev.
     this.logger.log(`OTP for ${input.phone}: ${code}`);
 
     return {

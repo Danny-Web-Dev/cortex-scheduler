@@ -9,8 +9,6 @@ export class SearchService {
     private readonly doctors: DoctorRepository,
   ) {}
 
-  // Smart search across specialties and doctors in one query. MySQL's default
-  // collation is case-insensitive, so `contains` matches regardless of case.
   async search(term: string): Promise<SearchResult> {
     const [specialties, doctors] = await Promise.all([
       this.specialties.search(term),

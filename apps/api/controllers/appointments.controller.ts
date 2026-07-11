@@ -1,17 +1,8 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Patch,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import {Body, Controller, Delete, HttpCode, HttpStatus, Param, Patch, Post, UseGuards,} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import type { Appointment } from '@cortex/shared';
-import { CurrentUser, JwtAuthGuard, type AuthenticatedUser } from '../middlewares';
+import { CurrentUser, JwtAuthGuard } from '../middlewares';
+import type { AuthenticatedUser } from '../types';
 import { AppointmentsService } from '../services';
 import { HoldAppointmentDto, RescheduleAppointmentDto } from '../dtos';
 

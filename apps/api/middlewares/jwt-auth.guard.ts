@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import type { Request } from 'express';
 import { ConfigService } from '../config';
 import { UnauthorizedException } from '../utils';
-import type { AuthenticatedUser, JwtPayload } from './jwt.types';
+import type { AuthenticatedUser, JwtPayload } from '../types';
 
 const BEARER_PREFIX = 'Bearer ';
 

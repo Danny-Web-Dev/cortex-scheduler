@@ -1,34 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import type { Appointment, AppointmentStatus } from '@prisma/client';
-import { PrismaService, type PrismaExecutor } from '../models';
-import type { AppointmentWithRelations } from '../utils';
+import { PrismaService } from '../models';
+import type {
+  AppointmentStatusUpdate,
+  AppointmentWithRelations,
+  CreateAppointment,
+  PrismaExecutor,
+  SlotOccupancy,
+} from '../types';
 
-// Statuses that still occupy a slot; CANCELLED never blocks.
 const ACTIVE_STATUSES: AppointmentStatus[] = ['HELD', 'CONFIRMED', 'COMPLETED'];
 
 const WITH_NAMES = {
   doctor: { select: { name: true } },
   specialty: { select: { name: true } },
 } as const;
-
-export type SlotOccupancy = Pick<Appointment, 'startsAt' | 'status' | 'holdExpiresAt'>;
-
-type CreateAppointment = {
-  userId: string;
-  doctorId: string;
-  specialtyId: string;
-  startsAt: Date;
-  durationMin: number;
-  status: AppointmentStatus;
-  holdExpiresAt?: Date | null;
-  slotKey?: string | null;
-};
-
-type StatusUpdate = {
-  status: AppointmentStatus;
-  holdExpiresAt?: Date | null;
-  slotKey?: string | null;
-};
 
 @Injectable()
 export class AppointmentRepository {
@@ -74,7 +60,7 @@ export class AppointmentRepository {
 
   updateStatus(
     id: string,
-    data: StatusUpdate,
+    data: AppointmentStatusUpdate,
     tx?: PrismaExecutor,
   ): Promise<AppointmentWithRelations> {
     return (tx ?? this.prisma).appointment.update({ where: { id }, data, include: WITH_NAMES });

@@ -1,16 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
-import type { Slot, SlotsResponse } from '@cortex/shared';
+import type { SlotsResponse } from '@cortex/shared';
 import { ConfigService } from '../config';
 import { AppointmentRepository, DoctorRepository } from '../repositories';
 import { NotFoundException, ValidationException, computeFreeSlots } from '../utils';
-
-export type FreeSlotsContext = {
-  doctorId: string;
-  specialtyId: string;
-  durationMin: number;
-  slots: Slot[];
-};
+import type { FreeSlotsContext } from '../types';
 
 @Injectable()
 export class DoctorsService {
@@ -19,8 +13,7 @@ export class DoctorsService {
     private readonly doctors: DoctorRepository,
     private readonly appointments: AppointmentRepository,
   ) {}
-
-  // Shared by the slots endpoint and the hold flow so both agree on what's free.
+  
   async computeFreeSlotsForDate(doctorId: string, date: string): Promise<FreeSlotsContext> {
     const tz = this.config.clinicTz;
     const dayStart = DateTime.fromISO(date, { zone: tz }).startOf('day');

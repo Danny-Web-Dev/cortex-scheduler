@@ -4,7 +4,8 @@ import { HoldExpiredException, SlotTakenException, ValidationException } from '.
 import type { PrismaService } from '../../models';
 import type { ConfigService } from '../../config';
 import type { AppointmentRepository } from '../../repositories';
-import type { DoctorsService, FreeSlotsContext } from '../../services/doctors.service';
+import type { DoctorsService } from '../../services/doctors.service';
+import type { FreeSlotsContext } from '../../types';
 
 const DOCTOR_ID = 'doctor-1';
 const SPECIALTY_ID = 'spec-1';

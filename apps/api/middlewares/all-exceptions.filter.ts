@@ -11,8 +11,7 @@ import { ZodValidationException } from 'nestjs-zod';
 import type { Response } from 'express';
 import type { ApiErrorBody, ErrorCode } from '@cortex/shared';
 import { DomainException } from '../utils';
-
-type Resolved = { status: number; code: ErrorCode; message: string };
+import type { ResolvedError } from '../types';
 
 // One place that turns every thrown thing into { error: { code, message } }.
 // Services throw DomainExceptions; framework throws HttpExceptions; anything
@@ -33,7 +32,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     response.status(resolved.status).json(body);
   }
 
-  private resolve(exception: unknown): Resolved {
+  private resolve(exception: unknown): ResolvedError {
     if (exception instanceof DomainException) {
       return { status: exception.httpStatus, code: exception.code, message: exception.message };
     }

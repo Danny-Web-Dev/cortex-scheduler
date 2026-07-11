@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AppointmentsController, MeAppointmentsController } from './controllers';
-import { AppointmentsService } from './services';
+import { AppointmentsController, MeAppointmentsController } from '../controllers';
+import { AppointmentsService } from '../services';
 import { AuthModule } from './auth.module';
 import { DoctorsModule } from './doctors.module';
 
