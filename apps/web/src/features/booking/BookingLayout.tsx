@@ -18,14 +18,14 @@ export const BookingLayout = () => {
   return (
     <BookingContext.Provider value={{ heldAppointment, setHeldAppointment }}>
       <div className="space-y-8">
-        <ol className="flex items-center justify-center gap-4 text-sm">
+        <ol className="flex items-center justify-center gap-1.5 text-sm sm:gap-4">
           {STEPS.map((step, i) => {
             const done = i < activeIndex;
             const active = i === activeIndex;
             return (
-              <li key={step.path} className="flex items-center gap-2">
+              <li key={step.path} className="flex items-center gap-1 sm:gap-2">
                 <span
-                  className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold ${
+                  className={`flex h-2 w-2 items-center justify-center rounded-full text-xs font-bold sm:h-7 sm:w-7 ${
                     active
                       ? 'bg-brand-600 text-white'
                       : done
@@ -33,12 +33,14 @@ export const BookingLayout = () => {
                         : 'bg-ink-100 text-ink-400'
                   }`}
                 >
-                  {i + 1}
+                  <span className="hidden sm:inline">{i + 1}</span>
                 </span>
-                <span className={active ? 'font-semibold text-ink-900' : 'text-ink-400'}>
+                <span
+                  className={`hidden sm:inline ${active ? 'font-semibold text-ink-900' : 'text-ink-400'}`}
+                >
                   {step.label}
                 </span>
-                {i < STEPS.length - 1 && <span className="mx-1 text-ink-300">›</span>}
+                {i < STEPS.length - 1 && <span className="hidden sm:inline mx-1 text-ink-300">›</span>}
               </li>
             );
           })}
