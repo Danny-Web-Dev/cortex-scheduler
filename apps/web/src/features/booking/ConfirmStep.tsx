@@ -1,25 +1,27 @@
+import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
+import type { Appointment } from '@cortex/shared';
 import { Button, Callout, Card, PageHeading } from '@/components/ui';
 import { formatFullDateTime } from '@/lib';
-import { useHoldCountdown } from '@/hooks';
-import { useBookingContext } from './booking-context';
+import { useActiveHold, useHoldCountdown } from '@/hooks';
 import { useConfirmHold } from './useConfirmHold';
 
 export const ConfirmStep = () => {
-  const { heldAppointment } = useBookingContext();
+  const { activeHold } = useActiveHold();
+  // Capture the hold on mount: clearing the store after confirm/release
+  // re-renders synchronously while the router navigation is still a pending
+  // transition, and a live read would bounce the user to /book/specialty
+  // before the real redirect commits.
+  const [held] = useState(activeHold);
 
-  // No hold in memory (e.g. a refresh landed here) — restart the flow.
-  if (!heldAppointment) return <Navigate to="/book/specialty" replace />;
+  // Arrived without a hold (never started the flow) — restart.
+  if (!held) return <Navigate to="/book/specialty" replace />;
 
-  return <ConfirmView held={heldAppointment} />;
+  return <ConfirmView held={held} />;
 };
 
-const ConfirmView = ({
-  held,
-}: {
-  held: NonNullable<ReturnType<typeof useBookingContext>['heldAppointment']>;
-}) => {
+const ConfirmView = ({ held }: { held: Appointment }) => {
   const { t } = useTranslation();
   const { label, isExpired } = useHoldCountdown(held.holdExpiresAt ?? new Date().toISOString());
   const { confirm, confirming, goBack, releasing } = useConfirmHold(held);

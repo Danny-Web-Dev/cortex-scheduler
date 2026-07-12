@@ -96,6 +96,8 @@
   "booking.confirm.confirmedToast": "Appointment confirmed",
   "booking.confirm.holdExpiredToast": "Your hold expired — please pick a time again.",
   "booking.confirm.confirmFailedToast": "Could not confirm.",
+  "booking.holdToast.message": "Slot still held for <1>{{label}}</1>",
+  "booking.holdToast.cta": "Complete booking",
 
   "appointments.title": "My appointments",
   "appointments.bookNew": "Book new",

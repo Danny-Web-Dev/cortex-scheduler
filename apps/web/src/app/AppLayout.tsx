@@ -1,6 +1,7 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui';
+import { HoldToast } from '@/features/booking';
 import { useAuth, useLogout } from '@/hooks';
 import { cx } from '@/lib';
 
@@ -51,6 +52,7 @@ export const AppLayout = () => {
       <main className="mx-auto max-w-5xl px-4 py-8">
         <Outlet />
       </main>
+      <HoldToast />
     </div>
   );
 };

@@ -2,6 +2,7 @@ export * from './api-client';
 export * from './api-error';
 export * from './error-message';
 export * from './auth-store';
+export * from './hold-store';
 export * from './cx';
 export * from './env';
 export * from './format';

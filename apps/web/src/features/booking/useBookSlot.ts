@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ApiError, holdAppointment, queryKeys, rescheduleAppointment } from '@/lib';
+import { ApiError, holdAppointment, holdStore, queryKeys, rescheduleAppointment } from '@/lib';
 import { useToast } from '@/components/ui';
-import { useBookingContext } from './booking-context';
 
 type UseBookSlotArgs = {
   doctorId: string;
@@ -20,7 +19,6 @@ export const useBookSlot = ({ doctorId, date, rescheduleId }: UseBookSlotArgs) =
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { notify } = useToast();
-  const { setHeldAppointment } = useBookingContext();
 
   const refreshSlots = () =>
     queryClient.invalidateQueries({ queryKey: queryKeys.slots(doctorId, date) });
@@ -35,7 +33,7 @@ export const useBookSlot = ({ doctorId, date, rescheduleId }: UseBookSlotArgs) =
   const hold = useMutation({
     mutationFn: (startsAt: string) => holdAppointment({ doctorId, startsAt }),
     onSuccess: (appointment) => {
-      setHeldAppointment(appointment);
+      holdStore.setHold(appointment);
       navigate('/book/confirm');
     },
     onError: onSlotConflict,
