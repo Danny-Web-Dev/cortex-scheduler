@@ -13,12 +13,11 @@ export const useLogout = () => {
   return async () => {
     try {
       await logout.mutateAsync();
-    } catch {
-      // Best-effort — clear locally regardless of the server response.
+    } finally {
+      authStore.clear();
+      holdStore.clear();
+      queryClient.clear();
+      navigate(ROUTES.login, { replace: true });
     }
-    authStore.clear();
-    holdStore.clear();
-    queryClient.clear();
-    navigate(ROUTES.login, { replace: true });
   };
 };
