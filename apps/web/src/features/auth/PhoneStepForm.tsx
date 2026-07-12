@@ -2,21 +2,17 @@ import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input } from '@/components/ui';
 import { formatPhoneInput } from '@/lib';
+import { useOtpLoginContext } from './OtpLoginProvider';
 
-type PhoneStepFormProps = {
-  loading: boolean;
-  error?: string | null;
-  onSubmit: (phone: string) => string | null;
-};
-
-export const PhoneStepForm = ({ loading, error, onSubmit }: PhoneStepFormProps) => {
+export const PhoneStepForm = () => {
   const { t } = useTranslation();
+  const { submitPhone, requesting, requestError } = useOtpLoginContext();
   const [phone, setPhone] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setLocalError(onSubmit(phone.trim()));
+    setLocalError(submitPhone(phone.trim()));
   };
 
   return (
@@ -29,9 +25,9 @@ export const PhoneStepForm = ({ loading, error, onSubmit }: PhoneStepFormProps) 
         autoFocus
         value={phone}
         onChange={(e) => setPhone(formatPhoneInput(e.target.value))}
-        error={localError ?? error ?? undefined}
+        error={localError ?? requestError ?? undefined}
       />
-      <Button type="submit" loading={loading} className="w-full">
+      <Button type="submit" loading={requesting} className="w-full">
         {t('auth.phone.submit')}
       </Button>
     </form>

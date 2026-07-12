@@ -1,42 +1,23 @@
 import { useState, type FormEvent } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
-import { Button, Callout, Input } from '@/components/ui';
+import { useTranslation } from 'react-i18next';
+import { Button, Input } from '@/components/ui';
+import { useOtpLoginContext } from './OtpLoginProvider';
+import { DevCodeHint } from './DevCodeHint';
 
-type CodeStepFormProps = {
-  devCode: string | null;
-  loading: boolean;
-  error?: string | null;
-  onSubmit: (code: string) => string | null;
-  onUseDifferentNumber: () => void;
-};
-
-export const CodeStepForm = ({
-  devCode,
-  loading,
-  error,
-  onSubmit,
-  onUseDifferentNumber,
-}: CodeStepFormProps) => {
+export const CodeStepForm = () => {
   const { t } = useTranslation();
+  const { submitCode, verifying, verifyError, resetToPhone } = useOtpLoginContext();
   const [code, setCode] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setLocalError(onSubmit(code.trim()));
+    setLocalError(submitCode(code.trim()));
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {devCode && (
-        <Callout tone="brand" className="px-3 py-2">
-          <Trans
-            i18nKey="auth.code.devCode"
-            values={{ code: devCode }}
-            components={{ code: <span className="font-mono font-bold" /> }}
-          />
-        </Callout>
-      )}
+      <DevCodeHint />
       <Input
         id="code"
         label={t('auth.code.label')}
@@ -46,14 +27,14 @@ export const CodeStepForm = ({
         autoFocus
         value={code}
         onChange={(e) => setCode(e.target.value)}
-        error={localError ?? error ?? undefined}
+        error={localError ?? verifyError ?? undefined}
       />
-      <Button type="submit" loading={loading} className="w-full">
+      <Button type="submit" loading={verifying} className="w-full">
         {t('auth.code.submit')}
       </Button>
       <button
         type="button"
-        onClick={onUseDifferentNumber}
+        onClick={resetToPhone}
         className="w-full text-sm text-ink-500 hover:text-ink-700"
       >
         {t('auth.code.useDifferentNumber')}

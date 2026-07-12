@@ -1,21 +1,17 @@
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input } from '@/components/ui';
+import { useOtpLoginContext } from './OtpLoginProvider';
 
-type NameStepFormProps = {
-  loading: boolean;
-  error?: string | null;
-  onSubmit: (name: string) => string | null;
-};
-
-export const NameStepForm = ({ loading, error, onSubmit }: NameStepFormProps) => {
+export const NameStepForm = () => {
   const { t } = useTranslation();
+  const { submitName, savingName, nameError } = useOtpLoginContext();
   const [name, setName] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setLocalError(onSubmit(name.trim()));
+    setLocalError(submitName(name.trim()));
   };
 
   return (
@@ -28,9 +24,9 @@ export const NameStepForm = ({ loading, error, onSubmit }: NameStepFormProps) =>
         autoFocus
         value={name}
         onChange={(e) => setName(e.target.value)}
-        error={localError ?? error ?? undefined}
+        error={localError ?? nameError ?? undefined}
       />
-      <Button type="submit" loading={loading} className="w-full">
+      <Button type="submit" loading={savingName} className="w-full">
         {t('auth.name.submit')}
       </Button>
     </form>
