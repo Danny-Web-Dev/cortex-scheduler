@@ -8,3 +8,8 @@ export const queryKeys = {
   myAppointments: (scope: AppointmentScope) => ['me', 'appointments', scope] as const,
   search: (q: string) => ['search', q] as const,
 };
+
+// Mutation keys let sibling units observe in-flight mutations via useIsMutating.
+export const mutationKeys = {
+  bookSlot: ['book-slot'] as const,
+};

@@ -1,7 +1,14 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ApiError, holdAppointment, holdStore, queryKeys, rescheduleAppointment } from '@/lib';
+import {
+  ApiError,
+  holdAppointment,
+  holdStore,
+  mutationKeys,
+  queryKeys,
+  rescheduleAppointment,
+} from '@/lib';
 import { useToast } from '@/components/ui';
 
 type UseBookSlotArgs = {
@@ -31,6 +38,7 @@ export const useBookSlot = ({ doctorId, date, rescheduleId }: UseBookSlotArgs) =
   };
 
   const hold = useMutation({
+    mutationKey: mutationKeys.bookSlot,
     mutationFn: (startsAt: string) => holdAppointment({ doctorId, startsAt }),
     onSuccess: (appointment) => {
       holdStore.setHold(appointment);
@@ -40,6 +48,7 @@ export const useBookSlot = ({ doctorId, date, rescheduleId }: UseBookSlotArgs) =
   });
 
   const reschedule = useMutation({
+    mutationKey: mutationKeys.bookSlot,
     mutationFn: (startsAt: string) => rescheduleAppointment(rescheduleId ?? '', { startsAt }),
     onSuccess: () => {
       notify(t('booking.slot.rescheduledToast'), 'success');
