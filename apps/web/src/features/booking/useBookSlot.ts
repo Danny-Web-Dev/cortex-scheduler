@@ -40,9 +40,13 @@ export const useBookSlot = ({ doctorId, date, rescheduleId }: UseBookSlotArgs) =
   const hold = useMutation({
     mutationKey: mutationKeys.bookSlot,
     mutationFn: (startsAt: string) => holdAppointment({ doctorId, startsAt }),
-    onSuccess: (appointment) => {
+    onSuccess: async (appointment) => {
+      // Await the route commit before storing the hold. navigate() (data
+      // router) resolves after the URL has actually moved, so this
+      // guarantees window.location — which HoldToast reads directly — is
+      // already /book/confirm by the time the store update fires.
+      await navigate('/book/confirm');
       holdStore.setHold(appointment);
-      navigate('/book/confirm');
     },
     onError: onSlotConflict,
   });

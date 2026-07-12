@@ -9,9 +9,14 @@ const NO_HOLD_EXPIRY = '1970-01-01T00:00:00.000Z';
 // user is anywhere but the confirm step (which shows its own countdown).
 export const useHoldToast = () => {
   const { activeHold } = useActiveHold();
-  const { pathname } = useLocation();
+  // Subscribe to route changes so we re-render on navigation, but compare
+  // against window.location directly rather than this hook's pathname: on a
+  // data router, the browser URL commits before RouterProvider's own context
+  // catches up, and a hold set in that gap would otherwise read as "not on
+  // confirm" for a frame and flash the toast on.
+  useLocation();
   const { label, isExpired } = useHoldCountdown(activeHold?.holdExpiresAt ?? NO_HOLD_EXPIRY);
 
-  const onConfirmStep = pathname.startsWith(CONFIRM_STEP_PATH);
+  const onConfirmStep = window.location.pathname.startsWith(CONFIRM_STEP_PATH);
   return { visible: activeHold !== null && !isExpired && !onConfirmStep, label };
 };
