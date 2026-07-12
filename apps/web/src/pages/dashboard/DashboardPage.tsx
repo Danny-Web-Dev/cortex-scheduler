@@ -9,9 +9,9 @@ import {
 export const DashboardPage = () => (
   <div className="space-y-10">
     <DashboardHero />
+    <FindCareSection />
     <UpcomingAppointmentsSection />
     <RecentVisitsSection />
-    <FindCareSection />
     <BrowseSpecialtiesSection />
   </div>
 );

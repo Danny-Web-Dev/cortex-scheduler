@@ -1,8 +1,5 @@
 import { createContext, useContext } from 'react';
 
-// Every feature provider (OtpLoginProvider, ConfirmHoldProvider, ...) pairs a
-// Context with a hook that throws outside its provider — built once here
-// instead of hand-rolled per provider.
 export const createRequiredContext = <T,>(hookName: string) => {
   const Context = createContext<T | null>(null);
 

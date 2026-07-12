@@ -13,8 +13,6 @@ type OtpLoginProviderProps = {
   children: ReactNode;
 };
 
-// Single owner of the phone → code → name state machine; the login units
-// read it through context instead of props.
 export const OtpLoginProvider = ({ children }: OtpLoginProviderProps) => {
   const login = useOtpLogin();
 

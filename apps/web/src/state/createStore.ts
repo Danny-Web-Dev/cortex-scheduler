@@ -1,7 +1,5 @@
 type Listener = () => void;
 
-// Minimal observable store: module-level singletons (authStore, holdStore)
-// build on this instead of hand-rolling the same listener-set boilerplate.
 export const createStore = <T,>(initial: T) => {
   let state = initial;
   const listeners = new Set<Listener>();
