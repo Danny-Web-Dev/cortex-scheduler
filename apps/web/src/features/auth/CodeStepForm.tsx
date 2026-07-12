@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Button, Callout, Input } from '@/components/ui';
 
 type CodeStepFormProps = {
@@ -30,7 +30,11 @@ export const CodeStepForm = ({
     <form onSubmit={handleSubmit} className="space-y-4">
       {devCode && (
         <Callout tone="brand" className="px-3 py-2">
-          Dev code: <span className="font-mono font-bold">{devCode}</span>
+          <Trans
+            i18nKey="auth.code.devCode"
+            values={{ code: devCode }}
+            components={{ code: <span className="font-mono font-bold" /> }}
+          />
         </Callout>
       )}
       <Input

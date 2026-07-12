@@ -102,6 +102,7 @@ src/
 - **Barrels:** one `index.ts` per top-level folder (`hooks`, `components/ui`, `lib`, `features/*`). Barrels only re-export — no logic. Never import a barrel from inside its own folder (circular import risk); siblings use direct relative paths.
 - **Components: ~100 lines as the ceiling guideline.** Not a hard cutoff, but a strong signal the component is doing too much. Going slightly over is fine when splitting would hurt readability.
 - **Components render, hooks think.** When a component accumulates logic (multiple `useState`/`useEffect`, derived state, handlers with business rules), extract a custom hook (`useBookingStepper`, `useHoldCountdown`) in `hooks/`. The component keeps only JSX and simple bindings.
+- **Every user-facing string comes from `i18n/en.json`** via `useTranslation()` / `<Trans>` — no hardcoded UI copy in components. This includes JSX text, placeholders, `aria-label`s, toast messages, and empty/error states. `<Trans>` uses the `components` prop with named tags (`"… <countdown>{{label}}</countdown>"`), never inline fallback children.
 - **React Query for all server state.** No server data in useState/useReducer/context. Query keys in one `queryKeys.ts` factory file.
 - **Access token lives in memory only** — never localStorage. On 401 the API client calls `/auth/refresh` once (`credentials: 'include'`) and retries; refresh failure → redirect to login.
 - Every query renders three states: loading (skeleton), error (retryable message keyed off `error.code`), success.
@@ -125,10 +126,11 @@ export const useHoldCountdown = (holdExpiresAt: string) => {
 
 // ✅ ConfirmStep.tsx — component only renders
 export const ConfirmStep = ({ hold }: ConfirmStepProps) => {
+  const { t } = useTranslation();
   const { label, isExpired } = useHoldCountdown(hold.holdExpiresAt);
 
   if (isExpired) return <HoldExpiredNotice />;
-  return <p>Slot held for {label}</p>;
+  return <p>{t('booking.confirm.hold', { label })}</p>;
 };
 ```
 

@@ -5,6 +5,7 @@
   "app.nav.appointments": "Appointments",
   "app.logout": "Log out",
 
+  "ui.loading": "Loading",
   "ui.error.default": "Something went wrong.",
   "ui.error.retry": "Try again",
 
@@ -28,6 +29,7 @@
   "auth.code.label": "Verification code",
   "auth.code.placeholder": "123456",
   "auth.code.submit": "Verify & sign in",
+  "auth.code.devCode": "Dev code: <code>{{code}}</code>",
   "auth.code.useDifferentNumber": "Use a different number",
   "auth.name.subtitle": "Welcome to Cortex! Tell us your name to finish signing up",
   "auth.name.label": "Your name",
@@ -54,6 +56,7 @@
   "catalog.empty": "No specialties available",
 
   "search.placeholder": "Search specialties or doctors…",
+  "search.inputLabel": "Search specialties or doctors",
   "search.empty": "No matches for “{{term}}”.",
   "search.specialties": "Specialties",
   "search.doctors": "Doctors",
@@ -90,13 +93,13 @@
   "booking.confirm.durationLabel": "Duration",
   "booking.confirm.duration": "{{durationMin}} min",
   "booking.confirm.expired": "Your hold expired. Please pick a time again.",
-  "booking.confirm.hold": "Slot held for <1>{{label}}</1>",
+  "booking.confirm.hold": "Slot held for <countdown>{{label}}</countdown>",
   "booking.confirm.back": "Back to times",
   "booking.confirm.submit": "Confirm appointment",
   "booking.confirm.confirmedToast": "Appointment confirmed",
   "booking.confirm.holdExpiredToast": "Your hold expired — please pick a time again.",
   "booking.confirm.confirmFailedToast": "Could not confirm.",
-  "booking.holdToast.message": "Slot still held for <1>{{label}}</1>",
+  "booking.holdToast.message": "Slot still held for <countdown>{{label}}</countdown>",
   "booking.holdToast.cta": "Complete booking",
 
   "appointments.title": "My appointments",

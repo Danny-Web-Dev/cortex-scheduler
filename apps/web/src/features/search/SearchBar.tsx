@@ -14,7 +14,7 @@ export const SearchBar = () => {
         type="search"
         value={term}
         placeholder={t('search.placeholder')}
-        aria-label="Search specialties or doctors"
+        aria-label={t('search.inputLabel')}
         onChange={(e) => onChange(e.target.value)}
         onFocusCapture={onFocus}
         onBlur={onBlur}

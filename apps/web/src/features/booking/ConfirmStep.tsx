@@ -59,9 +59,11 @@ const ConfirmView = ({ held }: { held: Appointment }) => {
         </Callout>
       ) : (
         <Callout tone="brand" className="mt-5">
-          <Trans i18nKey="booking.confirm.hold" values={{ label }}>
-            Slot held for <span className="font-mono font-bold" />
-          </Trans>
+          <Trans
+            i18nKey="booking.confirm.hold"
+            values={{ label }}
+            components={{ countdown: <span className="font-mono font-bold" /> }}
+          />
         </Callout>
       )}
 
