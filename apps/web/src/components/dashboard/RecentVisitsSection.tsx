@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { SectionHeading } from '@/components/ui';
 import { ROUTES } from '@/config';
 import { AppointmentList } from '@/components/appointments';
-import { useMyAppointments } from '@/hooks/appointments';
+import { useMyAppointments } from '@/api/queries/appointments';
 
 export const RecentVisitsSection = () => {
   const { t } = useTranslation();

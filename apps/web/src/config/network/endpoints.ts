@@ -1,6 +1,3 @@
-// Every backend path the frontend calls, centralized by resource. Path
-// builders take the id/query pieces so no call site interpolates a raw
-// template string by hand.
 export const ENDPOINTS = {
   auth: {
     otpRequest: '/auth/otp/request',

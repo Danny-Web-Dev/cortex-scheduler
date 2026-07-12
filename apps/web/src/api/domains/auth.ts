@@ -8,8 +8,8 @@ import {
   type VerifyOtpInput,
   type VerifyOtpResponse,
 } from '@cortex/shared';
-import { apiFetch } from './http';
-import { ENDPOINTS } from './endpoints';
+import { apiFetch } from '../../config/network/http.ts';
+import { ENDPOINTS } from '../../config/network/endpoints.ts';
 
 export const auth = {
   requestOtp: async (input: RequestOtpInput): Promise<RequestOtpResponse> => {

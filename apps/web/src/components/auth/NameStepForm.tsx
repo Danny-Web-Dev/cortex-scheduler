@@ -1,18 +1,12 @@
-import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input } from '@/components/ui';
 import { useOtpLoginContext } from '@/state/auth';
+import { useStepForm } from '@/hooks/auth';
 
 export const NameStepForm = () => {
   const { t } = useTranslation();
   const { submitName, savingName, nameError } = useOtpLoginContext();
-  const [name, setName] = useState('');
-  const [localError, setLocalError] = useState<string | null>(null);
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    setLocalError(submitName(name.trim()));
-  };
+  const { value: name, setValue: setName, localError, handleSubmit } = useStepForm(submitName);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

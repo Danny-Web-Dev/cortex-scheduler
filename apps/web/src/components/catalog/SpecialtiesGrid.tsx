@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import type { Specialty } from '@cortex/shared';
 import { EmptyState, QueryState, SkeletonGrid } from '@/components/ui';
-import { useSpecialties } from '@/hooks/catalog';
+import { useSpecialties } from '@/api/queries/catalog';
 import { SpecialtyCard } from './SpecialtyCard';
 
 const SPECIALTIES_GRID_CLASS = 'grid gap-4 sm:grid-cols-2 lg:grid-cols-3';

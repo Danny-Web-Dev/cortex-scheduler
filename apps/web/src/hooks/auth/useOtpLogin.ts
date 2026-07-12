@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -8,9 +7,11 @@ import {
   VerifyOtpSchema,
   normalizePhone,
 } from '@cortex/shared';
-import { client, ApiError } from '@/api';
+import { useRequestOtpMutation, useVerifyOtpMutation } from '@/api/queries/auth';
+import { useUpdateProfileMutation } from '@/api/queries/users';
 import { ROUTES } from '@/config';
 import { authStore } from '@/state/auth';
+import { resolveErrorMessage } from '@/utils';
 
 type Step = 'phone' | 'code' | 'name';
 
@@ -29,55 +30,56 @@ export const useOtpLogin = () => {
   const [phone, setPhone] = useState('');
   const [devCode, setDevCode] = useState<string | null>(null);
 
-  const requestMutation = useMutation({
-    mutationFn: (nextPhone: string) => client.auth.requestOtp({ phone: nextPhone }),
-    onSuccess: (res) => {
-      setDevCode(res.devCode ?? null);
-      setStep('code');
-    },
-  });
-
-  const verifyMutation = useMutation({
-    mutationFn: (code: string) => client.auth.verifyOtp({ phone, code }),
-    onSuccess: (res) => {
-      authStore.setSession(res.accessToken, res.user);
-      if (res.isNewUser) {
-        setStep('name');
-        return;
-      }
-      navigate(ROUTES.dashboard, { replace: true });
-    },
-  });
-
-  const nameMutation = useMutation({
-    mutationFn: (name: string) => client.users.updateProfile({ name }),
-    onSuccess: (user) => {
-      authStore.markJustRegistered();
-      authStore.setUser(user);
-      navigate(ROUTES.dashboard, { replace: true });
-    },
-  });
+  const requestMutation = useRequestOtpMutation();
+  const verifyMutation = useVerifyOtpMutation();
+  const nameMutation = useUpdateProfileMutation();
 
   const submitPhone = (value: string) => {
     const parsed = RequestOtpSchema.safeParse({ phone: value });
     if (!parsed.success) return t('auth.error.invalidPhone');
     const normalized = normalizePhone(value);
     setPhone(normalized);
-    requestMutation.mutate(normalized);
+    requestMutation.mutate(
+      { phone: normalized },
+      {
+        onSuccess: (res) => {
+          setDevCode(res.devCode ?? null);
+          setStep('code');
+        },
+      },
+    );
     return null;
   };
 
   const submitCode = (value: string) => {
     const parsed = VerifyOtpSchema.safeParse({ phone, code: value });
     if (!parsed.success) return t('auth.error.invalidCode');
-    verifyMutation.mutate(value);
+    verifyMutation.mutate(
+      { phone, code: value },
+      {
+        onSuccess: (res) => {
+          authStore.setSession(res.accessToken, res.user);
+          if (res.isNewUser) {
+            setStep('name');
+            return;
+          }
+          navigate(ROUTES.dashboard, { replace: true });
+        },
+      },
+    );
     return null;
   };
 
   const submitName = (value: string) => {
     const parsed = UpdateProfileSchema.safeParse({ name: value });
     if (!parsed.success) return t('auth.error.invalidName');
-    nameMutation.mutate(parsed.data.name);
+    nameMutation.mutate(parsed.data, {
+      onSuccess: (user) => {
+        authStore.markJustRegistered();
+        authStore.setUser(user);
+        navigate(ROUTES.dashboard, { replace: true });
+      },
+    });
     return null;
   };
 
@@ -88,7 +90,7 @@ export const useOtpLogin = () => {
   };
 
   const errorOf = (error: unknown): string | null =>
-    error instanceof ApiError ? error.message : error ? t('auth.error.requestFailed') : null;
+    error ? resolveErrorMessage(error, t, t('auth.error.requestFailed')) : null;
 
   return {
     step,

@@ -1,15 +1,13 @@
-import { createContext, useContext, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useOtpLogin } from '@/hooks/auth';
+import { createRequiredContext } from '../createRequiredContext';
 
 type OtpLoginContextValue = ReturnType<typeof useOtpLogin>;
 
-const OtpLoginContext = createContext<OtpLoginContextValue | null>(null);
+const [OtpLoginContext, useOtpLoginContext] =
+  createRequiredContext<OtpLoginContextValue>('useOtpLoginContext');
 
-export const useOtpLoginContext = () => {
-  const value = useContext(OtpLoginContext);
-  if (!value) throw new Error('useOtpLoginContext must be used within OtpLoginProvider');
-  return value;
-};
+export { useOtpLoginContext };
 
 type OtpLoginProviderProps = {
   children: ReactNode;

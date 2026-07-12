@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import type { SlotsResponse } from '@cortex/shared';
 import { EmptyState, QueryState, SkeletonGrid } from '@/components/ui';
 import { cx } from '@/utils';
-import { useSlots, useBookSlot, useSlotDate } from '@/hooks/booking';
+import { useSlots } from '@/api/queries/catalog';
+import { useBookSlot, useSlotDate } from '@/hooks/booking';
 import { SlotButton } from './SlotButton';
 
 const SLOTS_GRID_CLASS = 'grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6';

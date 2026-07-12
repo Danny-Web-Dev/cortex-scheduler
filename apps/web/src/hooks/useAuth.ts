@@ -1,8 +1,8 @@
-import { useSyncExternalStore } from 'react';
 import { authStore } from '@/state/auth';
+import { useStore } from './useStore';
 
 export const useAuth = () => {
-  const state = useSyncExternalStore(authStore.subscribe, authStore.getState, authStore.getState);
+  const state = useStore(authStore);
   return {
     user: state.user,
     accessToken: state.accessToken,

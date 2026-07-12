@@ -1,7 +1,8 @@
-import { createContext, useContext, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import type { Appointment } from '@cortex/shared';
 import { useHoldCountdown } from '@/hooks';
 import { useConfirmHold } from '@/hooks/booking';
+import { createRequiredContext } from '../createRequiredContext';
 
 type ConfirmHoldContextValue = {
   held: Appointment;
@@ -13,13 +14,10 @@ type ConfirmHoldContextValue = {
   releasing: boolean;
 };
 
-const ConfirmHoldContext = createContext<ConfirmHoldContextValue | null>(null);
+const [ConfirmHoldContext, useConfirmHoldContext] =
+  createRequiredContext<ConfirmHoldContextValue>('useConfirmHoldContext');
 
-export const useConfirmHoldContext = () => {
-  const value = useContext(ConfirmHoldContext);
-  if (!value) throw new Error('useConfirmHoldContext must be used within ConfirmHoldProvider');
-  return value;
-};
+export { useConfirmHoldContext };
 
 type ConfirmHoldProviderProps = {
   held: Appointment;

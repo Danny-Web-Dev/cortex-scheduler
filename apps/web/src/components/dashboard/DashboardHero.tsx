@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui';
 import { ROUTES } from '@/config';
 import { useAuth } from '@/hooks';
-import { useMyAppointments } from '@/hooks/appointments';
+import { useMyAppointments } from '@/api/queries/appointments';
 
 export const DashboardHero = () => {
   const { t } = useTranslation();

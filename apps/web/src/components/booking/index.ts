@@ -1,4 +1,5 @@
 export * from './BookingStepper';
+export * from './RequireBookingParam';
 export * from './DoctorGrid';
 export * from './DoctorCard';
 export * from './SlotStepHeading';

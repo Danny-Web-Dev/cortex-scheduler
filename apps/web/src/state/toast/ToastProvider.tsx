@@ -1,5 +1,6 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import { useCallback, useMemo, useState, type ReactNode } from 'react';
 import { Toast, type ToastTone } from '@/components/ui';
+import { createRequiredContext } from '../createRequiredContext';
 
 type ToastEntry = { id: number; message: string; tone: ToastTone };
 
@@ -7,7 +8,9 @@ type ToastContextValue = {
   notify: (message: string, tone?: ToastTone) => void;
 };
 
-const ToastContext = createContext<ToastContextValue | null>(null);
+const [ToastContext, useToast] = createRequiredContext<ToastContextValue>('useToast');
+
+export { useToast };
 
 const AUTO_DISMISS_MS = 4000;
 
@@ -34,10 +37,4 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
       </div>
     </ToastContext.Provider>
   );
-};
-
-export const useToast = (): ToastContextValue => {
-  const ctx = useContext(ToastContext);
-  if (!ctx) throw new Error('useToast must be used within a ToastProvider');
-  return ctx;
 };

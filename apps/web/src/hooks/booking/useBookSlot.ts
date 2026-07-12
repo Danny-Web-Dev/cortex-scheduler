@@ -1,8 +1,9 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { client, ApiError } from '@/api';
-import { mutationKeys, queryKeys, ROUTES } from '@/config';
+import { ApiError } from '@/api';
+import { useHoldAppointmentMutation, useRescheduleAppointmentMutation } from '@/api/queries/appointments';
+import { queryKeys, ROUTES } from '@/config';
 import { holdStore } from '@/state/hold';
 import { useToast } from '@/state/toast';
 
@@ -21,6 +22,8 @@ export const useBookSlot = ({ doctorId, date, rescheduleId }: UseBookSlotArgs) =
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { notify } = useToast();
+  const hold = useHoldAppointmentMutation();
+  const reschedule = useRescheduleAppointmentMutation();
 
   const refreshSlots = () =>
     queryClient.invalidateQueries({ queryKey: queryKeys.slots(doctorId, date) });
@@ -32,34 +35,35 @@ export const useBookSlot = ({ doctorId, date, rescheduleId }: UseBookSlotArgs) =
     void refreshSlots();
   };
 
-  const hold = useMutation({
-    mutationKey: mutationKeys.bookSlot,
-    mutationFn: (startsAt: string) => client.appointments.hold({ doctorId, startsAt }),
-    onSuccess: async (appointment) => {
-      // Await the route commit before storing the hold. navigate() (data
-      // router) resolves after the URL has actually moved, so this
-      // guarantees window.location — which HoldToast reads directly — is
-      // already /book/confirm by the time the store update fires.
-      await navigate(ROUTES.book.confirm);
-      holdStore.setHold(appointment);
-    },
-    onError: onSlotConflict,
-  });
-
-  const reschedule = useMutation({
-    mutationKey: mutationKeys.bookSlot,
-    mutationFn: (startsAt: string) => client.appointments.reschedule(rescheduleId ?? '', { startsAt }),
-    onSuccess: () => {
-      notify(t('booking.slot.rescheduledToast'), 'success');
-      void queryClient.invalidateQueries({ queryKey: ['me', 'appointments'] });
-      navigate(ROUTES.appointments);
-    },
-    onError: onSlotConflict,
-  });
-
   const select = (startsAt: string) => {
-    if (rescheduleId) return reschedule.mutate(startsAt);
-    return hold.mutate(startsAt);
+    if (rescheduleId) {
+      return reschedule.mutate(
+        { id: rescheduleId, input: { startsAt } },
+        {
+          onSuccess: () => {
+            notify(t('booking.slot.rescheduledToast'), 'success');
+            void queryClient.invalidateQueries({ queryKey: queryKeys.myAppointmentsAll() });
+            navigate(ROUTES.appointments);
+          },
+          onError: onSlotConflict,
+        },
+      );
+    }
+
+    return hold.mutate(
+      { doctorId, startsAt },
+      {
+        onSuccess: async (appointment) => {
+          // Await the route commit before storing the hold. navigate() (data
+          // router) resolves after the URL has actually moved, so this
+          // guarantees window.location — which HoldToast reads directly — is
+          // already /book/confirm by the time the store update fires.
+          await navigate(ROUTES.book.confirm);
+          holdStore.setHold(appointment);
+        },
+        onError: onSlotConflict,
+      },
+    );
   };
 
   return { select, pending: hold.isPending || reschedule.isPending };

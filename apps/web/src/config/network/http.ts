@@ -2,8 +2,8 @@ import type { ErrorCode } from '@cortex/shared';
 import type { RequestOptions } from '@/types';
 import { env } from '@/config';
 import { authStore } from '@/state/auth';
-import { ApiError } from './error';
-import { ENDPOINTS } from './endpoints';
+import { ApiError } from './error.ts';
+import { ENDPOINTS } from './endpoints.ts';
 
 const UNAUTHORIZED = 401;
 

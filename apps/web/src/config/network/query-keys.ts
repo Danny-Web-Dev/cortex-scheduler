@@ -6,6 +6,8 @@ export const queryKeys = {
   doctors: (specialtyId: string) => ['specialties', specialtyId, 'doctors'] as const,
   slots: (doctorId: string, date: string) => ['doctors', doctorId, 'slots', date] as const,
   myAppointments: (scope: AppointmentScope) => ['me', 'appointments', scope] as const,
+  // Prefix key for invalidating every scope at once (react-query matches by prefix).
+  myAppointmentsAll: () => ['me', 'appointments'] as const,
   search: (q: string) => ['search', q] as const,
 };
 

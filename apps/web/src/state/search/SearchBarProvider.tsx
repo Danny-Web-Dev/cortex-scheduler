@@ -1,15 +1,13 @@
-import { createContext, useContext, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useSearchDropdown } from '@/hooks/search';
+import { createRequiredContext } from '../createRequiredContext';
 
 type SearchBarContextValue = ReturnType<typeof useSearchDropdown>;
 
-const SearchBarContext = createContext<SearchBarContextValue | null>(null);
+const [SearchBarContext, useSearchBarContext] =
+  createRequiredContext<SearchBarContextValue>('useSearchBarContext');
 
-export const useSearchBarContext = () => {
-  const value = useContext(SearchBarContext);
-  if (!value) throw new Error('useSearchBarContext must be used within SearchBarProvider');
-  return value;
-};
+export { useSearchBarContext };
 
 type SearchBarProviderProps = {
   children: ReactNode;

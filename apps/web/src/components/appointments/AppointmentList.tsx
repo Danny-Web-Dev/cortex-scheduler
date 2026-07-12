@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import type { Appointment, AppointmentScope } from '@cortex/shared';
 import { EmptyState, QueryState, SkeletonGrid } from '@/components/ui';
-import { useMyAppointments } from '@/hooks/appointments';
+import { useMyAppointments } from '@/api/queries/appointments';
 import { AppointmentCard } from './AppointmentCard';
 
 const LIST_GRID_CLASS = 'grid gap-3';

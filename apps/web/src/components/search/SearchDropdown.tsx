@@ -1,16 +1,20 @@
 import { useTranslation } from 'react-i18next';
-import { ROUTES } from '@/config';
 import { useSearchBarContext } from '@/state/search';
 import { SearchResultGroup } from './SearchResultGroup';
 
 export const SearchDropdown = () => {
   const { t } = useTranslation();
-  const { term, open, data, enabled, showEmpty, go } = useSearchBarContext();
+  const { term, open, data, enabled, showEmpty, highlightedId, pickSpecialty, pickDoctor } =
+    useSearchBarContext();
 
   if (!open || !enabled) return null;
   if (!data && !showEmpty) return null;
   return (
-    <div className="surface-bordered absolute z-20 mt-2 w-full overflow-hidden shadow-lg">
+    <div
+      id="search-results"
+      role="listbox"
+      className="surface-bordered absolute z-20 mt-2 w-full overflow-hidden shadow-lg"
+    >
       {showEmpty && <p className="px-4 py-3 text-subtitle">{t('search.empty', { term })}</p>}
 
       {data && data.specialties.length > 0 && (
@@ -18,7 +22,8 @@ export const SearchDropdown = () => {
           label={t('search.specialties')}
           items={data.specialties}
           keyOf={(s) => s.id}
-          onPick={(s) => go(ROUTES.book.doctorWithSpecialty({ specialtyId: s.id }))}
+          highlightedId={highlightedId}
+          onPick={pickSpecialty}
           className="border-b border-ink-100"
           renderItem={(s) => (
             <>
@@ -34,9 +39,8 @@ export const SearchDropdown = () => {
           label={t('search.doctors')}
           items={data.doctors}
           keyOf={(d) => d.id}
-          onPick={(d) =>
-            go(ROUTES.book.slotWithDoctor({ specialtyId: d.specialtyId, doctorId: d.id }))
-          }
+          highlightedId={highlightedId}
+          onPick={pickDoctor}
           renderItem={(d) => (
             <>
               <span className="font-medium text-ink-900">{d.name}</span>

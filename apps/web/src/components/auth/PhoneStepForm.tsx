@@ -1,19 +1,13 @@
-import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Input } from '@/components/ui';
 import { formatPhoneInput } from '@/utils';
 import { useOtpLoginContext } from '@/state/auth';
+import { useStepForm } from '@/hooks/auth';
 
 export const PhoneStepForm = () => {
   const { t } = useTranslation();
   const { submitPhone, requesting, requestError } = useOtpLoginContext();
-  const [phone, setPhone] = useState('');
-  const [localError, setLocalError] = useState<string | null>(null);
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    setLocalError(submitPhone(phone.trim()));
-  };
+  const { value: phone, setValue: setPhone, localError, handleSubmit } = useStepForm(submitPhone);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

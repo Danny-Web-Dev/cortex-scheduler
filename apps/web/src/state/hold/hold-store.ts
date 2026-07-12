@@ -1,4 +1,5 @@
 import { AppointmentSchema, type Appointment } from '@cortex/shared';
+import { createStore } from '../createStore';
 
 // The active hold survives page refreshes (sessionStorage) and navigation away
 // from the booking flow, so the floating hold toast can bring the user back to
@@ -37,25 +38,17 @@ const hydrate = (): Appointment | null => {
   return parsed.data;
 };
 
-let state: HoldState = { activeHold: hydrate() };
-const listeners = new Set<() => void>();
-
-const emit = () => listeners.forEach((l) => l());
+const store = createStore<HoldState>({ activeHold: hydrate() });
 
 export const holdStore = {
-  getState: (): HoldState => state,
-  subscribe: (listener: () => void): (() => void) => {
-    listeners.add(listener);
-    return () => listeners.delete(listener);
-  },
+  getState: store.getState,
+  subscribe: store.subscribe,
   setHold: (appointment: Appointment): void => {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(appointment));
-    state = { activeHold: appointment };
-    emit();
+    store.setState(() => ({ activeHold: appointment }));
   },
   clear: (): void => {
     sessionStorage.removeItem(STORAGE_KEY);
-    state = { activeHold: null };
-    emit();
+    store.setState(() => ({ activeHold: null }));
   },
 };

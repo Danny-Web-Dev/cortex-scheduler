@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { SectionHeading, Skeleton } from '@/components/ui';
 import { AppointmentList } from '@/components/appointments';
-import { useMyAppointments } from '@/hooks/appointments';
+import { useMyAppointments } from '@/api/queries/appointments';
 
 export const UpcomingAppointmentsSection = () => {
   const { t } = useTranslation();

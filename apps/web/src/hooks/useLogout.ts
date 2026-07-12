@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { client } from '@/api';
+import { useLogoutMutation } from '@/api/queries/auth';
 import { authStore } from '@/state/auth';
 import { holdStore } from '@/state/hold';
 import { ROUTES } from '@/config';
@@ -8,10 +8,11 @@ import { ROUTES } from '@/config';
 export const useLogout = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const logout = useLogoutMutation();
 
   return async () => {
     try {
-      await client.auth.logout();
+      await logout.mutateAsync();
     } catch {
       // Best-effort — clear locally regardless of the server response.
     }

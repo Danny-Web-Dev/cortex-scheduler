@@ -1,7 +1,3 @@
-import { appointments } from './appointments';
-import { auth } from './auth';
-import { catalog } from './catalog';
-import { search } from './search';
-import { users } from './users';
+import { appointments, auth, catalog, search, users } from './domains';
 
 export const client = { appointments, auth, catalog, search, users };

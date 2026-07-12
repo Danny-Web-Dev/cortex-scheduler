@@ -1,4 +1,5 @@
 import type { AuthUser } from '@cortex/shared';
+import { createStore } from '../createStore';
 
 // Access token lives in memory only — never localStorage (XSS-safe). A tiny
 // observable store so React can re-render on login/logout via useSyncExternalStore.
@@ -10,35 +11,17 @@ type AuthState = {
   justRegistered: boolean;
 };
 
-let state: AuthState = { accessToken: null, user: null, justRegistered: false };
-const listeners = new Set<() => void>();
-
-const emit = () => listeners.forEach((l) => l());
+const store = createStore<AuthState>({ accessToken: null, user: null, justRegistered: false });
 
 export const authStore = {
-  getState: (): AuthState => state,
-  subscribe: (listener: () => void): (() => void) => {
-    listeners.add(listener);
-    return () => listeners.delete(listener);
-  },
-  setSession: (accessToken: string, user: AuthUser): void => {
-    state = { ...state, accessToken, user };
-    emit();
-  },
-  setAccessToken: (accessToken: string): void => {
-    state = { ...state, accessToken };
-    emit();
-  },
-  setUser: (user: AuthUser): void => {
-    state = { ...state, user };
-    emit();
-  },
-  markJustRegistered: (): void => {
-    state = { ...state, justRegistered: true };
-    emit();
-  },
-  clear: (): void => {
-    state = { accessToken: null, user: null, justRegistered: false };
-    emit();
-  },
+  getState: store.getState,
+  subscribe: store.subscribe,
+  setSession: (accessToken: string, user: AuthUser): void =>
+    store.setState((s) => ({ ...s, accessToken, user })),
+  setAccessToken: (accessToken: string): void =>
+    store.setState((s) => ({ ...s, accessToken })),
+  setUser: (user: AuthUser): void => store.setState((s) => ({ ...s, user })),
+  markJustRegistered: (): void => store.setState((s) => ({ ...s, justRegistered: true })),
+  clear: (): void =>
+    store.setState(() => ({ accessToken: null, user: null, justRegistered: false })),
 };

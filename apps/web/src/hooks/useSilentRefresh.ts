@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { client } from '@/api';
+import { useRefreshSessionMutation } from '@/api/queries/auth';
 import { authStore } from '@/state/auth';
 
 // On app load, attempt one refresh to restore a session from the httpOnly
@@ -7,20 +7,21 @@ import { authStore } from '@/state/auth';
 // the login screen before the token comes back.
 export const useSilentRefresh = () => {
   const [ready, setReady] = useState(false);
+  const refreshSession = useRefreshSessionMutation();
 
   useEffect(() => {
     let active = true;
-    const run = async () => {
-      try {
-        const tokens = await client.auth.refresh();
+    refreshSession
+      .mutateAsync()
+      .then((tokens) => {
         if (active) authStore.setSession(tokens.accessToken, tokens.user);
-      } catch {
+      })
+      .catch(() => {
         // No valid session — stay logged out.
-      } finally {
+      })
+      .finally(() => {
         if (active) setReady(true);
-      }
-    };
-    void run();
+      });
     return () => {
       active = false;
     };

@@ -1,22 +1,21 @@
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { Doctor } from '@cortex/shared';
 import { EmptyState, QueryState, SkeletonGrid } from '@/components/ui';
-import { ROUTES } from '@/config';
-import { useDoctors } from '@/hooks/booking';
+import { useDoctors } from '@/api/queries/catalog';
+import { useBookingNavigation } from '@/hooks/booking';
 import { DoctorCard } from './DoctorCard';
 
 const DOCTORS_GRID_CLASS = 'grid gap-4 sm:grid-cols-2';
 
 export const DoctorGrid = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [params] = useSearchParams();
   const specialtyId = params.get('specialtyId') ?? '';
   const query = useDoctors(specialtyId);
+  const { goToSlots } = useBookingNavigation();
 
-  const onSelect = (doctor: Doctor) =>
-    navigate(ROUTES.book.slotWithDoctor({ specialtyId, doctorId: doctor.id }));
+  const onSelect = (doctor: Doctor) => goToSlots(specialtyId, doctor.id);
 
   return (
     <QueryState
