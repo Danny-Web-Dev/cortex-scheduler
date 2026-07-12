@@ -100,15 +100,21 @@ src/
 
 - **`@/` alias → `src/`**, configured in `tsconfig.json` paths + `vite.config.ts` resolve.alias. Never deep relative paths like `../../hooks/useSlots`.
 - **Barrels:** one `index.ts` per top-level folder (`hooks`, `components/ui`, `lib`, `features/*`). Barrels only re-export — no logic. Never import a barrel from inside its own folder (circular import risk); siblings use direct relative paths.
-- **Components: ~100 lines as the ceiling guideline.** Not a hard cutoff, but a strong signal the component is doing too much. Going slightly over is fine when splitting would hurt readability.
-- **Components render, hooks think.** When a component accumulates logic (multiple `useState`/`useEffect`, derived state, handlers with business rules), extract a custom hook (`useBookingStepper`, `useHoldCountdown`) in `hooks/`. The component keeps only JSX and simple bindings.
+- **Pages, steps, and layouts are pure composition.** A routed component is ~10–20 lines of JSX assembling small named units — no data threading, no inline visual blocks. If a page declares more than a guard clause (`<Navigate>`) and a provider, something leaked in.
+- **One file per distinct visual block** (hero, stepper, summary box, action row, dropdown panel, nav, form). The component name says what the block is (`DashboardHero`, `HoldSummary`, `ConfirmActions`). Not per-element: a list's `<li>` markup or a one-line brand link stays inline in its block.
+- **Units are prop-less and self-contained by default.** Each unit calls its own hooks (`useTranslation`, feature hooks, `useSearchParams`, store bindings) instead of receiving data from its parent. Calling the same React Query hook in two sibling units is idiomatic — the cache dedupes. Props are allowed in exactly two cases: (a) a unit rendered in a list/iteration receives its entity (`DoctorCard`, `SlotButton`, `AppointmentActions`); (b) generic primitives in `components/ui`.
+- **Shared client state between sibling units is never duplicated** (two `useState`/`useMutation` instances are two different states). Resolve it, in preference order:
+  1. URL search params via a tiny shared hook (`useSlotDate`) — best for shareable UI state;
+  2. a feature-local provider that calls the existing "thinking" hook once and exposes it via `use<X>Context` (`ConfirmHoldProvider`, `OtpLoginProvider`) — providers stay inside the feature and out of the barrel;
+  3. observing in-flight mutations with `mutationKey` + `useIsMutating` when a unit only needs "is something pending".
+- **Components render, hooks think.** When a unit accumulates logic (multiple `useState`/`useEffect`, derived state, handlers with business rules), extract a custom hook (`useBookingStepper`, `useHoldCountdown`). The component keeps only JSX and simple bindings. ~100 lines remains the ceiling guideline — with one block per file, most units land well under 50.
 - **Every user-facing string comes from `i18n/en.json`** via `useTranslation()` / `<Trans>` — no hardcoded UI copy in components. This includes JSX text, placeholders, `aria-label`s, toast messages, and empty/error states. `<Trans>` uses the `components` prop with named tags (`"… <countdown>{{label}}</countdown>"`), never inline fallback children.
 - **React Query for all server state.** No server data in useState/useReducer/context. Query keys in one `queryKeys.ts` factory file.
 - **Access token lives in memory only** — never localStorage. On 401 the API client calls `/auth/refresh` once (`credentials: 'include'`) and retries; refresh failure → redirect to login.
 - Every query renders three states: loading (skeleton), error (retryable message keyed off `error.code`), success.
 - Mutations: optimistic where safe, invalidate related queries on settle.
 - Tailwind only, custom components — no UI kit. Shared primitives in `components/ui/`.
-- Components: typed props, named export, co-located tests (`SlotGrid.tsx` + `SlotGrid.test.tsx`; hooks likewise).
+- Components: named export, co-located tests (`SlotGrid.tsx` + `SlotGrid.test.tsx`; hooks likewise); typed props only where props are sanctioned above.
 
 ### Golden example — component/hook split
 ```tsx
@@ -123,15 +129,45 @@ export const useHoldCountdown = (holdExpiresAt: string) => {
 
   return { secondsLeft, isExpired: secondsLeft <= 0, label: formatCountdown(secondsLeft) };
 };
+```
 
-// ✅ ConfirmStep.tsx — component only renders
-export const ConfirmStep = ({ hold }: ConfirmStepProps) => {
-  const { t } = useTranslation();
-  const { label, isExpired } = useHoldCountdown(hold.holdExpiresAt);
+### Golden example — page as pure composition of prop-less units
+```tsx
+// ✅ ConfirmStep.tsx — guard, provider, composition. Nothing else.
+export const ConfirmStep = () => {
+  const { activeHold } = useActiveHold();
+  const [held] = useState(activeHold);
 
-  if (isExpired) return <HoldExpiredNotice />;
-  return <p>{t('booking.confirm.hold', { label })}</p>;
+  if (!held) return <Navigate to="/book/specialty" replace />;
+  return (
+    <ConfirmHoldProvider held={held}>
+      <ConfirmHeading />
+      <HoldSummary />
+      <HoldCountdownNotice />
+      <ConfirmActions />
+    </ConfirmHoldProvider>
+  );
 };
+
+// ✅ ConfirmActions.tsx — prop-less unit: pulls what it needs itself
+export const ConfirmActions = () => {
+  const { t } = useTranslation();
+  const { confirm, confirming, goBack, releasing, isExpired } = useConfirmHoldContext();
+
+  return (
+    <div className="mt-6 flex gap-3">
+      <Button variant="secondary" onClick={goBack} loading={releasing}>
+        {t('booking.confirm.back')}
+      </Button>
+      <Button onClick={confirm} loading={confirming} disabled={isExpired}>
+        {t('booking.confirm.submit')}
+      </Button>
+    </div>
+  );
+};
+
+// ❌ never — parent fetches and threads data through props
+export const ConfirmStep = ({ hold, onConfirm, confirming }: ConfirmStepProps) => { /* … */ };
 ```
 
 ---
