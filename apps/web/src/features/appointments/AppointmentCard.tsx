@@ -1,63 +1,27 @@
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import type { Appointment, AppointmentStatusValue } from '@cortex/shared';
-import { Badge, Button, Card, type BadgeProps } from '@/components/ui';
+import type { Appointment } from '@cortex/shared';
+import { Card } from '@/components/ui';
 import { formatFullDateTime } from '@/lib';
-import { useAppointmentActions } from './useAppointmentActions';
-
-const STATUS_TONE: Record<AppointmentStatusValue, BadgeProps['tone']> = {
-  HELD: 'amber',
-  CONFIRMED: 'brand',
-  CANCELLED: 'neutral',
-  COMPLETED: 'neutral-strong',
-};
+import { AppointmentStatusBadge } from './AppointmentStatusBadge';
+import { AppointmentActions } from './AppointmentActions';
 
 type AppointmentCardProps = {
   appointment: Appointment;
   actionable?: boolean;
 };
 
-export const AppointmentCard = ({ appointment, actionable = false }: AppointmentCardProps) => {
-  const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { cancel } = useAppointmentActions();
-
-  return (
-    <Card>
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-title">{appointment.doctorName}</p>
-          <p className="text-subtitle">{appointment.specialtyName}</p>
-          <p className="mt-2 text-sm font-medium text-ink-700">
-            {formatFullDateTime(appointment.startsAt)}
-          </p>
-        </div>
-        <Badge tone={STATUS_TONE[appointment.status]}>
-          {t(`appointments.status.${appointment.status}`)}
-        </Badge>
+export const AppointmentCard = ({ appointment, actionable = false }: AppointmentCardProps) => (
+  <Card>
+    <div className="flex items-start justify-between gap-4">
+      <div>
+        <p className="text-title">{appointment.doctorName}</p>
+        <p className="text-subtitle">{appointment.specialtyName}</p>
+        <p className="mt-2 text-sm font-medium text-ink-700">
+          {formatFullDateTime(appointment.startsAt)}
+        </p>
       </div>
+      <AppointmentStatusBadge status={appointment.status} />
+    </div>
 
-      {actionable && (
-        <div className="mt-4 flex gap-2">
-          <Button
-            variant="secondary"
-            onClick={() =>
-              navigate(
-                `/book/slot?rescheduleId=${appointment.id}&doctorId=${appointment.doctorId}&specialtyId=${appointment.specialtyId}`,
-              )
-            }
-          >
-            {t('appointments.reschedule')}
-          </Button>
-          <Button
-            variant="danger"
-            loading={cancel.isPending}
-            onClick={() => cancel.mutate(appointment.id)}
-          >
-            {t('appointments.cancel')}
-          </Button>
-        </div>
-      )}
-    </Card>
-  );
-};
+    {actionable && <AppointmentActions appointment={appointment} />}
+  </Card>
+);
