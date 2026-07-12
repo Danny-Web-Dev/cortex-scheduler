@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { resolveErrorMessage } from '@/lib';
+import { resolveErrorMessage } from '@/utils';
 import { Button } from './Button';
 
 type ErrorStateProps = {

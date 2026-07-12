@@ -1,5 +1,5 @@
 import type { InputHTMLAttributes } from 'react';
-import { cx } from '@/lib';
+import { cx } from '@/utils';
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;

@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import { holdStore } from '@/lib';
+import { holdStore } from '@/state/hold';
 
 // React binding for the hold store — re-renders when the active hold changes.
 export const useActiveHold = () => {

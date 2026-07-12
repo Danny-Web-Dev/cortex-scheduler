@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { formatCountdown } from '@/lib';
+import { formatCountdown } from '@/utils';
 
 const MS_PER_SECOND = 1000;
 

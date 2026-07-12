@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { HoldToast } from '@/features/booking';
+import { HoldToast } from '@/components/booking';
 import { AppHeader } from './AppHeader';
 
 export const AppLayout = () => (

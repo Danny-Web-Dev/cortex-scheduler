@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { cx } from '@/lib';
+import { cx } from '@/utils';
 
 type BadgeTone = 'amber' | 'brand' | 'neutral' | 'neutral-strong';
 

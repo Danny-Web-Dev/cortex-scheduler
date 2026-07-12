@@ -1,5 +1,5 @@
 import type { HTMLAttributes, ReactNode } from 'react';
-import { cx } from '@/lib';
+import { cx } from '@/utils';
 
 type CardProps = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;

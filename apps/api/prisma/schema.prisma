@@ -69,6 +69,7 @@ model Doctor {
   appointments     Appointment[]
   createdAt        DateTime @default(now())
 
+  @@unique([specialtyId, name])
   @@index([specialtyId])
 }
 

@@ -1,11 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { cx } from '@/lib';
+import { cx } from '@/utils';
+import { ROUTES } from '@/config';
 
 const NAV = [
-  { to: '/dashboard', labelKey: 'app.nav.dashboard', match: '/dashboard' },
-  { to: '/book/specialty', labelKey: 'app.nav.book', match: '/book' },
-  { to: '/appointments', labelKey: 'app.nav.appointments', match: '/appointments' },
+  { to: ROUTES.dashboard, labelKey: 'app.nav.dashboard', match: ROUTES.dashboard },
+  { to: ROUTES.book.specialty, labelKey: 'app.nav.book', match: ROUTES.book.root },
+  { to: ROUTES.appointments, labelKey: 'app.nav.appointments', match: ROUTES.appointments },
 ] as const;
 
 export const NavLinks = () => {

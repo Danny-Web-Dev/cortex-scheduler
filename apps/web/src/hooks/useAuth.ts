@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react';
-import { authStore } from '@/lib';
+import { authStore } from '@/state/auth';
 
 export const useAuth = () => {
   const state = useSyncExternalStore(authStore.subscribe, authStore.getState, authStore.getState);

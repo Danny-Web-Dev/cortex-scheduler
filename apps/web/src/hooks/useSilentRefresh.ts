@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { authStore, refreshSession } from '@/lib';
+import { client } from '@/api';
+import { authStore } from '@/state/auth';
 
 // On app load, attempt one refresh to restore a session from the httpOnly
 // cookie. `ready` gates the app so an authenticated hard-refresh doesn't flash
@@ -11,7 +12,7 @@ export const useSilentRefresh = () => {
     let active = true;
     const run = async () => {
       try {
-        const tokens = await refreshSession();
+        const tokens = await client.auth.refresh();
         if (active) authStore.setSession(tokens.accessToken, tokens.user);
       } catch {
         // No valid session — stay logged out.

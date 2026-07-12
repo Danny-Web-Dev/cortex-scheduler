@@ -1,6 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { authStore, holdStore, logout } from '@/lib';
+import { client } from '@/api';
+import { authStore } from '@/state/auth';
+import { holdStore } from '@/state/hold';
+import { ROUTES } from '@/config';
 
 export const useLogout = () => {
   const navigate = useNavigate();
@@ -8,13 +11,13 @@ export const useLogout = () => {
 
   return async () => {
     try {
-      await logout();
+      await client.auth.logout();
     } catch {
       // Best-effort — clear locally regardless of the server response.
     }
     authStore.clear();
     holdStore.clear();
     queryClient.clear();
-    navigate('/login', { replace: true });
+    navigate(ROUTES.login, { replace: true });
   };
 };

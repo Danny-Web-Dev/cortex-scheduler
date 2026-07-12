@@ -2,6 +2,15 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+const DOCTOR_NAMES_BY_SPECIALTY: Record<string, [string, string]> = {
+  Cardiology: ['Sarah Whitfield', 'Marcus Chen'],
+  Dermatology: ['Elena Torres', 'Noah Bennett'],
+  Neurology: ['Priya Anand', 'David Kessler'],
+  Orthopedics: ['Rachel Kim', 'Tomas Alvarez'],
+  Pediatrics: ['Aisha Rahman', 'Liam Connor'],
+  Psychiatry: ['Jonathan Reyes', 'Maya Feldstein'],
+};
+
 const main = async () => {
   const specialties = await Promise.all([
     prisma.specialty.upsert({
@@ -38,13 +47,14 @@ const main = async () => {
 
   const doctors = [];
   for (const spec of specialties) {
+    const [firstDoctorName, secondDoctorName] = DOCTOR_NAMES_BY_SPECIALTY[spec.name];
     for (let i = 1; i <= 2; i++) {
+      const name = `Dr. ${i === 1 ? firstDoctorName : secondDoctorName}`;
       const doctor = await prisma.doctor.upsert({
-        where: { id: `${spec.id}-doctor-${i}` },
+        where: { specialtyId_name: { specialtyId: spec.id, name } },
         update: {},
         create: {
-          id: `${spec.id}-doctor-${i}`,
-          name: `Dr. ${spec.name} ${String.fromCharCode(64 + i)}`,
+          name,
           specialtyId: spec.id,
           yearsExperience: 5 + i * 5,
           rating: 4.5 + (i % 2) * 0.3,
