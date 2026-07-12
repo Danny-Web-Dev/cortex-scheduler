@@ -17,6 +17,7 @@ Monorepo: npm workspaces. `apps/api` (NestJS + Prisma + MySQL), `apps/web` (Reac
 - **Dates:** store and transmit **UTC ISO strings** everywhere. Timezone conversion happens only at the edges — Luxon + `CLINIC_TZ` on the API when computing slots from clinic-local availability, native `Intl` in the browser for display.
 
 ### Golden example — guard clause instead of else
+
 ```ts
 // ✅
 const getSlotLabel = (slot: Slot) => {
@@ -35,6 +36,7 @@ const getSlotLabel = (slot: Slot) => {
 ```
 
 ### Golden example — shared Zod schema as the single source of truth
+
 ```ts
 // packages/shared/src/schemas/appointment.ts
 export const CreateAppointmentSchema = z.object({
@@ -117,6 +119,7 @@ src/
 - Components: named export, co-located tests (`SlotGrid.tsx` + `SlotGrid.test.tsx`; hooks likewise); typed props only where props are sanctioned above.
 
 ### Golden example — component/hook split
+
 ```tsx
 // ✅ hooks/useHoldCountdown.ts — logic lives here
 export const useHoldCountdown = (holdExpiresAt: string) => {
@@ -132,6 +135,7 @@ export const useHoldCountdown = (holdExpiresAt: string) => {
 ```
 
 ### Golden example — page as pure composition of prop-less units
+
 ```tsx
 // ✅ ConfirmStep.tsx — guard, provider, composition. Nothing else.
 export const ConfirmStep = () => {
@@ -167,7 +171,9 @@ export const ConfirmActions = () => {
 };
 
 // ❌ never — parent fetches and threads data through props
-export const ConfirmStep = ({ hold, onConfirm, confirming }: ConfirmStepProps) => { /* … */ };
+export const ConfirmStep = ({ hold, onConfirm, confirming }: ConfirmStepProps) => {
+  /* … */
+};
 ```
 
 ---

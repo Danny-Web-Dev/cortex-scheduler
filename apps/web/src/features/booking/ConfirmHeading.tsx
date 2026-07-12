@@ -4,5 +4,7 @@ import { PageHeading } from '@/components/ui';
 export const ConfirmHeading = () => {
   const { t } = useTranslation();
 
-  return <PageHeading title={t('booking.confirm.title')} subtitle={t('booking.confirm.subtitle')} />;
+  return (
+    <PageHeading title={t('booking.confirm.title')} subtitle={t('booking.confirm.subtitle')} />
+  );
 };

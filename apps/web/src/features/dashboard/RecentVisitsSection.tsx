@@ -13,7 +13,10 @@ export const RecentVisitsSection = () => {
     <section>
       <div className="flex items-baseline justify-between">
         <SectionHeading>{t('dashboard.recentVisits')}</SectionHeading>
-        <Link to="/appointments" className="text-sm font-medium text-brand-600 hover:text-brand-700">
+        <Link
+          to="/appointments"
+          className="text-sm font-medium text-brand-600 hover:text-brand-700"
+        >
           {t('dashboard.viewAllAppointments')}
         </Link>
       </div>
