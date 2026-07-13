@@ -1,5 +1,5 @@
+import { useStore } from 'zustand';
 import { authStore } from '@/state/auth';
-import { useStore } from './useStore';
 
 export const useAuth = () => {
   const state = useStore(authStore);

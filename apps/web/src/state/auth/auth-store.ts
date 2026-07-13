@@ -1,5 +1,5 @@
+import { createStore } from 'zustand/vanilla';
 import type { AuthUser } from '@cortex/shared';
-import { createStore } from '../createStore';
 
 type AuthState = {
   accessToken: string | null;
@@ -7,17 +7,19 @@ type AuthState = {
   justRegistered: boolean;
 };
 
-const store = createStore<AuthState>({ accessToken: null, user: null, justRegistered: false });
+const store = createStore<AuthState>()(() => ({
+  accessToken: null,
+  user: null,
+  justRegistered: false,
+}));
 
 export const authStore = {
   getState: store.getState,
+  getInitialState: store.getInitialState,
   subscribe: store.subscribe,
-  setSession: (accessToken: string, user: AuthUser): void =>
-    store.setState((s) => ({ ...s, accessToken, user })),
-  setAccessToken: (accessToken: string): void =>
-    store.setState((s) => ({ ...s, accessToken })),
-  setUser: (user: AuthUser): void => store.setState((s) => ({ ...s, user })),
-  markJustRegistered: (): void => store.setState((s) => ({ ...s, justRegistered: true })),
-  clear: (): void =>
-    store.setState(() => ({ accessToken: null, user: null, justRegistered: false })),
+  setSession: (accessToken: string, user: AuthUser): void => store.setState({ accessToken, user }),
+  setAccessToken: (accessToken: string): void => store.setState({ accessToken }),
+  setUser: (user: AuthUser): void => store.setState({ user }),
+  markJustRegistered: (): void => store.setState({ justRegistered: true }),
+  clear: (): void => store.setState({ accessToken: null, user: null, justRegistered: false }),
 };
