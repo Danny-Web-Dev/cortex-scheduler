@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Cortex Scheduler API",
-    "description": "End-to-end collection for the Cortex Scheduler API. Run the folders top-to-bottom (Runner or `newman run`) — post-response scripts chain the whole demo: request OTP → verify → browse catalog → get slots → hold → confirm → reschedule → cancel → re-hold → release → list → refresh → logout. No manual copying of tokens or ids required.",
+    "description": "End-to-end collection for the Cortex Scheduler API. Run the folders top-to-bottom (Runner or `newman run`) \u2014 post-response scripts chain the whole demo: request OTP \u2192 verify \u2192 browse catalog \u2192 search \u2192 get slots \u2192 hold \u2192 confirm \u2192 reschedule \u2192 cancel \u2192 re-hold \u2192 release \u2192 list \u2192 update profile \u2192 refresh \u2192 logout. No manual copying of tokens or ids required.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -58,6 +58,14 @@
     {
       "key": "appointmentId",
       "value": ""
+    },
+    {
+      "key": "searchQuery",
+      "value": "ology"
+    },
+    {
+      "key": "profileName",
+      "value": "Danny Tester (Updated)"
     }
   ],
   "item": [
@@ -283,6 +291,50 @@
                   "pm.collectionVariables.set('slotStartsAt', j.slots[0].startsAt);",
                   "pm.collectionVariables.set('rescheduleStartsAt', j.slots[1].startsAt);",
                   "pm.collectionVariables.set('reholdStartsAt', j.slots[2].startsAt);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "item": [
+        {
+          "name": "Search Catalog",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/search?q={{searchQuery}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "{{searchQuery}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test('has specialties and doctors arrays', () => {",
+                  "  pm.expect(j.specialties).to.be.an('array');",
+                  "  pm.expect(j.doctors).to.be.an('array');",
+                  "});",
+                  "pm.test('matches across the catalog', () => pm.expect(j.specialties.length).to.be.above(0));"
                 ]
               }
             }
@@ -575,6 +627,45 @@
                 "exec": [
                   "pm.test('200 OK', () => pm.response.to.have.status(200));",
                   "pm.test('is an array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/me/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me",
+                "profile"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{profileName}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const j = pm.response.json();",
+                  "pm.test('name updated', () => pm.expect(j.name).to.eql(pm.collectionVariables.get('profileName')));"
                 ]
               }
             }
