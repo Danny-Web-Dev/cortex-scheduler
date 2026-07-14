@@ -9,11 +9,11 @@ type CalloutProps = {
   children: ReactNode;
 };
 
-const BASE_CLASS = 'rounded-lg border px-4 py-3 text-center text-sm';
+const BASE_CLASS = 'callout';
 
 const TONE_CLASS: Record<CalloutTone, string> = {
-  brand: 'border-brand-200 bg-brand-50 text-brand-800',
-  amber: 'border-amber-200 bg-amber-50 text-amber-800',
+  brand: 'callout-brand',
+  amber: 'callout-amber',
 };
 
 export const Callout = ({ tone = 'brand', className = '', children }: CalloutProps) => (

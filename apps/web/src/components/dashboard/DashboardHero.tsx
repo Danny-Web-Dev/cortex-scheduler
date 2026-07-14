@@ -13,7 +13,7 @@ export const DashboardHero = () => {
   const hasUpcoming = (upcoming.data?.length ?? 0) > 0;
 
   return (
-    <section className="rounded-card bg-linear-to-br from-brand-600 to-brand-700 px-6 py-8 text-white">
+    <section className="hero-surface">
       <p className="text-sm text-brand-100">
         {justRegistered ? t('dashboard.greetingNew') : t('dashboard.greetingReturning')}
       </p>

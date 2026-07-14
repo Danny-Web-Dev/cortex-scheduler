@@ -1,18 +1,33 @@
 @import 'tailwindcss';
 
-/* Design tokens — a small teal/slate medical palette. Exposed via @theme so
-   Tailwind generates utilities like bg-brand-500 / text-ink-700. */
+/* Design tokens — the brand identity is the two logo colors: a teal
+   (--color-brand-500 #31b296) as the primary/interactive color and a magenta
+   (--color-accent-500 #e6327d) as the decorative accent. Exposed via @theme so
+   Tailwind generates utilities like bg-brand-500 / text-accent-600. Semantic
+   colors (red = danger, amber = time-sensitive hold) stay on Tailwind's
+   built-in palettes so brand/accent never carry an error or warning meaning. */
 @theme {
-  --color-brand-50: #eefdfb;
-  --color-brand-100: #d4f7f2;
-  --color-brand-200: #aeeee7;
-  --color-brand-300: #77dfd6;
-  --color-brand-400: #3ac6bd;
-  --color-brand-500: #16a89f;
-  --color-brand-600: #0e857f;
-  --color-brand-700: #106a67;
-  --color-brand-800: #135453;
-  --color-brand-900: #144645;
+  --color-brand-50: #f2faf9;
+  --color-brand-100: #e3f5f1;
+  --color-brand-200: #c5efe6;
+  --color-brand-300: #9be3d4;
+  --color-brand-400: #6bd6bf;
+  --color-brand-500: #31b296;
+  --color-brand-600: #28927b;
+  --color-brand-700: #207563;
+  --color-brand-800: #1a6051;
+  --color-brand-900: #175245;
+
+  --color-accent-50: #fcf0f5;
+  --color-accent-100: #f9dfea;
+  --color-accent-200: #f7bdd5;
+  --color-accent-300: #f18db7;
+  --color-accent-400: #ea5794;
+  --color-accent-500: #e6327d;
+  --color-accent-600: #cd1964;
+  --color-accent-700: #a51450;
+  --color-accent-800: #871042;
+  --color-accent-900: #730e38;
 
   --color-ink-50: #f6f7f9;
   --color-ink-100: #eceef2;
@@ -28,13 +43,40 @@
   --radius-card: 0.875rem;
 }
 
-/* Theme layer — reusable component-level classes so render functions don't
-   need to repeat the same Tailwind utility combos in every file. */
+/* Theme layer — reusable component-level classes so render functions carry a
+   single semantic class (e.g. `btn btn-primary`) instead of repeating the same
+   Tailwind utility combos across files. Colors live here, in one place: to
+   re-skin the app, edit the tokens above and these classes, not the JSX. */
 @layer components {
+  /* --- surfaces --- */
   .surface-bordered {
     @apply rounded-lg border border-ink-200 bg-white;
   }
 
+  /* Content cards carry a soft accent-magenta frame — the one gentle place the
+     second logo color lives. Everything else stays teal/neutral. */
+  .surface-card {
+    @apply rounded-card border border-accent-200 bg-white p-5 shadow-sm;
+  }
+
+  .surface-card-interactive {
+    @apply cursor-pointer transition hover:border-brand-300 hover:shadow-md;
+  }
+
+  .surface-empty {
+    @apply flex flex-col items-center gap-2 rounded-card border border-dashed border-ink-200 bg-white px-6 py-10 text-center;
+  }
+
+  .surface-error {
+    @apply flex flex-col items-center gap-3 rounded-card border border-red-200 bg-red-50 px-6 py-8 text-center;
+  }
+
+  /* The dashboard hero — a gentle teal gradient, no accent. */
+  .hero-surface {
+    @apply rounded-card bg-linear-to-br from-brand-500 to-brand-700 px-6 py-8 text-white;
+  }
+
+  /* --- typography --- */
   .text-subtitle {
     @apply text-sm text-ink-500;
   }
@@ -43,6 +85,112 @@
     @apply font-semibold text-ink-900;
   }
 
+  .eyebrow {
+    @apply text-sm font-semibold uppercase tracking-wide text-ink-500;
+  }
+
+  /* The "Cortex" wordmark stays a calm teal — titles are never the accent. */
+  .brand-wordmark {
+    @apply font-bold text-brand-700;
+  }
+
+  /* --- focus --- */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-brand-500;
+  }
+
+  /* --- buttons --- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-primary {
+    @apply bg-brand-600 text-white hover:bg-brand-700 focus-visible:ring-brand-500;
+  }
+
+  .btn-secondary {
+    @apply border border-ink-200 bg-white text-ink-800 hover:bg-ink-50 focus-visible:ring-brand-500;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-brand-700 hover:bg-brand-50 focus-visible:ring-brand-500;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500;
+  }
+
+  /* Time-sensitive action tied to a live hold — amber keeps its "act now"
+     meaning distinct from primary/accent brand color. */
+  .btn-warning {
+    @apply rounded-lg bg-amber-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-amber-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2;
+  }
+
+  /* --- form fields --- */
+  .field-input {
+    @apply w-full rounded-lg border border-ink-200 bg-white px-3.5 py-2.5 text-ink-900 placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-brand-500;
+  }
+
+  /* --- badges --- */
+  .badge {
+    @apply rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+
+  .badge-brand {
+    @apply bg-brand-100 text-brand-700;
+  }
+
+  .badge-accent {
+    @apply bg-accent-100 text-accent-700;
+  }
+
+  .badge-amber {
+    @apply bg-amber-100 text-amber-700;
+  }
+
+  .badge-neutral {
+    @apply bg-ink-100 text-ink-500;
+  }
+
+  .badge-neutral-strong {
+    @apply bg-ink-100 text-ink-600;
+  }
+
+  /* --- callouts --- */
+  .callout {
+    @apply rounded-lg border px-4 py-3 text-center text-sm;
+  }
+
+  .callout-brand {
+    @apply border-brand-200 bg-brand-50 text-brand-800;
+  }
+
+  .callout-amber {
+    @apply border-amber-200 bg-amber-50 text-amber-800;
+  }
+
+  /* --- toasts --- */
+  .toast {
+    @apply flex w-full items-center justify-between gap-4 rounded-lg border px-4 py-3 text-sm font-medium shadow-md;
+  }
+
+  .toast-success {
+    @apply border-brand-300 bg-brand-50 text-brand-800;
+  }
+
+  .toast-error {
+    @apply border-red-300 bg-red-50 text-red-700;
+  }
+
+  .toast-info {
+    @apply border-ink-200 bg-white text-ink-800;
+  }
+
+  .toast-warning {
+    @apply border-amber-300 bg-amber-50 text-amber-800;
+  }
+
+  /* --- layout --- */
   .center-viewport {
     @apply flex min-h-full items-center justify-center;
   }

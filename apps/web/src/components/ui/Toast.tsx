@@ -11,14 +11,13 @@ type ToastProps = {
   children: React.ReactNode;
 };
 
-const BASE_CLASS =
-  'flex w-full items-center justify-between gap-4 rounded-lg border px-4 py-3 text-sm font-medium shadow-md';
+const BASE_CLASS = 'toast';
 
 const TONE_STYLES: Record<ToastTone, string> = {
-  success: 'border-brand-300 bg-brand-50 text-brand-800',
-  error: 'border-red-300 bg-red-50 text-red-700',
-  info: 'border-ink-200 bg-white text-ink-800',
-  warning: 'border-amber-300 bg-amber-50 text-amber-800',
+  success: 'toast-success',
+  error: 'toast-error',
+  info: 'toast-info',
+  warning: 'toast-warning',
 };
 
 // The one toast look: tone picks the design, children/action supply the content.

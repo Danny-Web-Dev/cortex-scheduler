@@ -47,7 +47,9 @@ const main = async () => {
 
   const doctors = [];
   for (const spec of specialties) {
-    const [firstDoctorName, secondDoctorName] = DOCTOR_NAMES_BY_SPECIALTY[spec.name];
+    const names = DOCTOR_NAMES_BY_SPECIALTY[spec.name];
+    if (!names) throw new Error(`No seed doctor names configured for specialty "${spec.name}"`);
+    const [firstDoctorName, secondDoctorName] = names;
     for (let i = 1; i <= 2; i++) {
       const name = `Dr. ${i === 1 ? firstDoctorName : secondDoctorName}`;
       const doctor = await prisma.doctor.upsert({

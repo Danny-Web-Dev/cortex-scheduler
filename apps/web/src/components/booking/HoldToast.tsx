@@ -16,10 +16,7 @@ export const HoldToast = () => {
         tone="warning"
         className="pointer-events-auto max-w-md"
         action={
-          <Link
-            to={ROUTES.book.confirm}
-            className="shrink-0 rounded-lg bg-amber-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-amber-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
-          >
+          <Link to={ROUTES.book.confirm} className="btn-warning shrink-0">
             {t('booking.holdToast.cta')}
           </Link>
         }

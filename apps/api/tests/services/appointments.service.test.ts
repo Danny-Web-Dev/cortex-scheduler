@@ -33,7 +33,12 @@ const buildService = (opts: {
 }) => {
   const create = vi.fn().mockImplementation(opts.createImpl ?? (() => relationRow()));
   const deleteExpiredHeldBySlotKey = vi.fn().mockResolvedValue(undefined);
-  const updateStatus = vi.fn().mockResolvedValue(relationRow({ status: 'CONFIRMED' }));
+  // startsAt override keeps this appointment's end time in the future relative
+  // to whenever the suite actually runs — confirm() should report the raw
+  // CONFIRMED status, not the lazily-derived COMPLETED for an ended slot.
+  const updateStatus = vi.fn().mockResolvedValue(
+    relationRow({ status: 'CONFIRMED', startsAt: new Date(Date.now() + 60_000) }),
+  );
   const findByIdForUser = vi.fn().mockResolvedValue(opts.findByIdForUser ?? null);
 
   const prisma = {

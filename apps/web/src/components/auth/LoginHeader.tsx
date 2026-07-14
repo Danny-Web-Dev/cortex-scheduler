@@ -13,7 +13,7 @@ export const LoginHeader = () => {
 
   return (
     <div className="mb-6 text-center">
-      <h1 className="text-2xl font-bold text-brand-700">{t('app.brand')}</h1>
+      <h1 className="brand-wordmark text-2xl">{t('app.brand')}</h1>
       <p className="mt-1 text-subtitle">{subtitleByStep[step]}</p>
     </div>
   );

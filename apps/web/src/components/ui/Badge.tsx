@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { cx } from '@/utils';
 
-type BadgeTone = 'amber' | 'brand' | 'neutral' | 'neutral-strong';
+type BadgeTone = 'amber' | 'brand' | 'accent' | 'neutral' | 'neutral-strong';
 
 export type BadgeProps = {
   tone?: BadgeTone;
@@ -9,13 +9,14 @@ export type BadgeProps = {
   className?: string;
 };
 
-const BASE_CLASS = 'rounded-full px-2.5 py-1 text-xs font-semibold';
+const BASE_CLASS = 'badge';
 
 const TONE_CLASS: Record<BadgeTone, string> = {
-  amber: 'bg-amber-100 text-amber-700',
-  brand: 'bg-brand-100 text-brand-700',
-  neutral: 'bg-ink-100 text-ink-500',
-  'neutral-strong': 'bg-ink-100 text-ink-600',
+  amber: 'badge-amber',
+  brand: 'badge-brand',
+  accent: 'badge-accent',
+  neutral: 'badge-neutral',
+  'neutral-strong': 'badge-neutral-strong',
 };
 
 export const Badge = ({ tone = 'neutral', children, className = '' }: BadgeProps) => (

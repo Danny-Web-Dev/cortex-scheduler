@@ -10,7 +10,7 @@ export const AppHeader = () => {
   return (
     <header className="border-b border-ink-200 bg-white">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-y-2 px-4 py-3">
-        <Link to={ROUTES.dashboard} className="text-lg font-bold text-brand-700">
+        <Link to={ROUTES.dashboard} className="brand-wordmark text-lg">
           {t('app.brand')}
         </Link>
         <NavLinks />

@@ -5,5 +5,5 @@ type SectionHeadingProps = {
 };
 
 export const SectionHeading = ({ children }: SectionHeadingProps) => (
-  <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-500">{children}</h2>
+  <h2 className="eyebrow mb-3">{children}</h2>
 );
