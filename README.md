@@ -45,7 +45,7 @@ Patient ──► OTP login ──► pick specialty ──► pick doctor ─�
 ## Features
 
 - **Passwordless phone login** — request a one-time code, verify it, you're in. New phone numbers get an account automatically.
-- **Secure sessions** — a short-lived access token (15 min) kept only in memory, plus a 7-day refresh token in an httpOnly cookie that is swapped for a new one on every use. If a stolen token is ever reused, the whole session chain is shut down.
+- **Secure sessions** — a short-lived access token (15 min) kept only in memory, plus a 1-day refresh token in an httpOnly cookie that is swapped for a new one on every use. If a stolen token is ever reused, the whole session chain is shut down.
 - **Doctor catalog** — browse by specialty, or search doctors and specialties by name.
 - **Live slot computation** — free time slots are calculated on the spot from each doctor's weekly schedule. Nothing is pre-generated, so there's nothing to keep in sync.
 - **Two-phase booking** — picking a slot *holds* it for 5 minutes, giving the patient time to review before *confirming*. An expired hold simply stops counting — no background jobs needed.
@@ -132,7 +132,7 @@ HTTP ──► controllers ──► services ──► repositories ──► P
 1. **Request a code** — a 6-digit code is generated, stored **SHA-256 hashed** with a 5-minute expiry, and any older codes for that phone stop working (latest code wins).
 2. **Verify the code** — hashes are compared in a timing-safe way, each code allows at most 5 attempts, and both endpoints are rate-limited. On success the user is found (or created) and receives:
    - an **access token** (15 min) in the response body — kept in memory on the client, never in localStorage;
-   - a **refresh token** (7 days) as an **httpOnly cookie** — invisible to JavaScript, stored server-side only as a hash.
+   - a **refresh token** (1 day) as an **httpOnly cookie** — invisible to JavaScript, stored server-side only as a hash.
 3. **Refresh & rotation** — every call to `/auth/refresh` retires the presented token and issues a fresh one *in the same family*. If a token that was **already used** ever shows up again, that can only mean it was stolen (the real client holds a newer one) — so the **entire family is revoked** and the stolen session dies with it.
 4. **On the frontend**, the API client retries a `401` once through `/auth/refresh` and sends the user to login if that fails; a silent-refresh hook restores the session on page load.
 
@@ -353,7 +353,3 @@ Run from the repo root (`-w` targets a workspace):
 | `docker compose exec api npm run prisma:seed` | Seed demo data inside the running `api` container. |
 | `docker compose down` | Stop and remove containers (keeps the MySQL data). |
 | `docker compose down -v` | Also delete the MySQL data — full reset. |
-
-## Roadmap
-
-Built so far: foundation, database, auth, core API + slot holds, and the full booking frontend (login/OTP, dashboard, specialty/doctor/slot/confirm booking flow, appointment management, catalog search). Production deployment is tracked in [PLAN.md](PLAN.md). Next-step features intentionally out of scope: family members, appointment reminders, medical history.
