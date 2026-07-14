@@ -5,7 +5,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { ConfigModule, ConfigService } from '@/config';
 import { PrismaModule } from '@/models';
-import { RepositoriesModule } from '@/repositories/repositories.module';
+import { RepositoriesModule } from '@/modules/repositories.module';
 import { AllExceptionsFilter } from '@/middlewares';
 import { AuthModule } from './auth.module';
 import { UsersModule } from './users.module';

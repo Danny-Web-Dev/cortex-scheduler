@@ -1,6 +1,5 @@
 import type { AppointmentStatus } from '@/models';
-
-const MS_PER_MIN = 60 * 1000;
+import { MS_PER_MINUTE } from '@/config';
 
 // Minimal shape shared by Prisma entities and their relation-loaded variants.
 type CompletableAppointment = {
@@ -14,7 +13,7 @@ type CompletableAppointment = {
 // holds are treated as free everywhere.
 export const isEndedConfirmed = (appointment: CompletableAppointment, now: Date): boolean => {
   if (appointment.status !== 'CONFIRMED') return false;
-  const endsAt = appointment.startsAt.getTime() + appointment.durationMin * MS_PER_MIN;
+  const endsAt = appointment.startsAt.getTime() + appointment.durationMin * MS_PER_MINUTE;
   return endsAt <= now.getTime();
 };
 

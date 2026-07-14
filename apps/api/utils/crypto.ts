@@ -1,5 +1,5 @@
 import { createHash, randomBytes, randomInt, timingSafeEqual } from 'node:crypto';
-import { OTP_CODE_LENGTH, REFRESH_TOKEN_BYTES } from './auth.constants';
+import { OTP_CODE_LENGTH, REFRESH_TOKEN_BYTES } from '@/config';
 
 const DECIMAL = 10;
 

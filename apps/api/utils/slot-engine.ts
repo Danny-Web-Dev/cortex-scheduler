@@ -9,7 +9,12 @@ const isOccupying = (appt: OccupyingAppointment, now: Date): boolean => {
   return false;
 };
 
-const windowSlots = (window: AvailabilityWindow, date: string, tz: string, durationMin: number,): DateTime[] => {
+const windowSlots = (
+  window: AvailabilityWindow,
+  date: string,
+  tz: string,
+  durationMin: number,
+): DateTime[] => {
   const start = DateTime.fromISO(`${date}T${window.startTime}`, { zone: tz });
   const end = DateTime.fromISO(`${date}T${window.endTime}`, { zone: tz });
   if (!start.isValid || !end.isValid) return [];
@@ -51,4 +56,5 @@ export const computeFreeSlots = (args: ComputeFreeSlotsArgs): Slot[] => {
   return result.sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 };
 
-export const isFreeSlot = (startsAtIso: string, freeSlots: Slot[]): boolean => freeSlots.some((s) => s.startsAt === startsAtIso);
+export const isFreeSlot = (startsAtIso: string, freeSlots: Slot[]): boolean =>
+  freeSlots.some((s) => s.startsAt === startsAtIso);

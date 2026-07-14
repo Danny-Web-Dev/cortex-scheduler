@@ -1,7 +1,5 @@
 import type { CookieOptions, Response } from 'express';
-import { REFRESH_COOKIE_NAME, REFRESH_COOKIE_PATH, REFRESH_TOKEN_TTL_DAYS } from './auth.constants';
-
-const MS_PER_DAY = 24 * 60 * 60 * 1000;
+import { MS_PER_DAY, REFRESH_COOKIE_NAME, REFRESH_COOKIE_PATH, REFRESH_TOKEN_TTL_DAYS } from '@/config';
 
 const baseCookieOptions = (isProduction: boolean): CookieOptions => ({
   httpOnly: true,

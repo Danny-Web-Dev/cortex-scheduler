@@ -5,11 +5,9 @@ import type {
   VerifyOtpInput,
 } from '@cortex/shared';
 import { PrismaService } from '@/models';
-import { ConfigService } from '@/config';
+import { ConfigService, MS_PER_MINUTE, OTP_MAX_ATTEMPTS, OTP_TTL_MIN } from '@/config';
 import { OtpRepository, UserRepository } from '@/repositories';
 import {
-  OTP_MAX_ATTEMPTS,
-  OTP_TTL_MIN,
   OtpAttemptsExceededException,
   OtpExpiredException,
   OtpInvalidException,
@@ -19,8 +17,6 @@ import {
 } from '@/utils';
 import { TokenService } from './token.service';
 import type { LoginResult, VerifyResult } from '@/types';
-
-const MS_PER_MIN = 60 * 1000;
 
 @Injectable()
 export class AuthService {
@@ -36,20 +32,19 @@ export class AuthService {
 
   async requestOtp(input: RequestOtpInput): Promise<RequestOtpResponse> {
     const code = generateOtpCode();
-    const expiresAt = new Date(Date.now() + OTP_TTL_MIN * MS_PER_MIN);
+    const expiresAt = new Date(Date.now() + OTP_TTL_MIN * MS_PER_MINUTE);
 
     await this.prisma.$transaction(async (tx) => {
       await this.otps.invalidateActive(input.phone, tx);
       await this.otps.create({ phone: input.phone, codeHash: sha256(code), expiresAt }, tx);
     });
 
-    this.logger.log(`OTP for ${input.phone}: ${code}`);
+    if (this.config.isDevelopment) this.logger.log(`OTP for ${input.phone}: ${code}`);
 
     return {
       phone: input.phone,
       expiresAt: expiresAt.toISOString(),
-      // devCode: this.config.isDevelopment ? code : undefined,
-      devCode: code,
+      devCode: this.config.isDevelopment ? code : undefined,
     };
   }
 

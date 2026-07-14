@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { SearchResult } from '@cortex/shared';
 import { DoctorRepository, SpecialtyRepository } from '@/repositories';
+import { toDoctorDto, toSpecialtyDto } from '@/utils';
 
 @Injectable()
 export class SearchService {
@@ -16,22 +17,8 @@ export class SearchService {
     ]);
 
     return {
-      specialties: specialties.map((s) => ({
-        id: s.id,
-        name: s.name,
-        description: s.description,
-        icon: s.icon,
-        avgDurationMin: s.avgDurationMin,
-      })),
-      doctors: doctors.map((d) => ({
-        id: d.id,
-        name: d.name,
-        specialtyId: d.specialtyId,
-        specialtyName: d.specialty.name,
-        yearsExperience: d.yearsExperience,
-        rating: d.rating,
-        bio: d.bio,
-      })),
+      specialties: specialties.map(toSpecialtyDto),
+      doctors: doctors.map((d) => ({ ...toDoctorDto(d), specialtyName: d.specialty.name })),
     };
   }
 }

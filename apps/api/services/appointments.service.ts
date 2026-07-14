@@ -7,10 +7,9 @@ import type {
   RescheduleAppointmentInput,
 } from '@cortex/shared';
 import { PrismaService } from '@/models';
-import { ConfigService } from '@/config';
+import { ConfigService, HOLD_TTL_MIN, MS_PER_MINUTE } from '@/config';
 import { AppointmentRepository } from '@/repositories';
 import {
-  HOLD_TTL_MIN,
   HoldExpiredException,
   NotFoundException,
   SlotTakenException,
@@ -23,8 +22,6 @@ import {
   toAppointmentDto,
 } from '@/utils';
 import { DoctorsService } from './doctors.service';
-
-const MS_PER_MIN = 60 * 1000;
 
 @Injectable()
 export class AppointmentsService {
@@ -40,7 +37,7 @@ export class AppointmentsService {
 
     const startsAt = new Date(input.startsAt);
     const slotKey = slotKeyFor(input.doctorId, input.startsAt);
-    const holdExpiresAt = new Date(Date.now() + HOLD_TTL_MIN * MS_PER_MIN);
+    const holdExpiresAt = new Date(Date.now() + HOLD_TTL_MIN * MS_PER_MINUTE);
 
     try {
       const created = await this.prisma.$transaction(async (tx) => {
@@ -107,11 +104,7 @@ export class AppointmentsService {
     return toAppointmentDto(updated);
   }
 
-  async reschedule(
-    userId: string,
-    id: string,
-    input: RescheduleAppointmentInput,
-  ): Promise<AppointmentDto> {
+  async reschedule(userId: string, id: string, input: RescheduleAppointmentInput): Promise<AppointmentDto> {
     const existing = await this.appointments.findByIdForUser(id, userId);
     if (!existing) throw new NotFoundException('Appointment not found');
     const reschedulable =

@@ -11,17 +11,19 @@ export const useSilentRefresh = () => {
 
   useEffect(() => {
     let active = true;
-    refreshSession
-      .mutateAsync()
-      .then((tokens) => {
+
+    const restore = async () => {
+      try {
+        const tokens = await refreshSession.mutateAsync();
         if (active) authStore.setSession(tokens.accessToken, tokens.user);
-      })
-      .catch(() => {
+      } catch {
         // No valid session — stay logged out.
-      })
-      .finally(() => {
+      } finally {
         if (active) setReady(true);
-      });
+      }
+    };
+
+    void restore();
     return () => {
       active = false;
     };

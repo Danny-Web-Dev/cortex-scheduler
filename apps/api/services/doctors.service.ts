@@ -13,7 +13,7 @@ export class DoctorsService {
     private readonly doctors: DoctorRepository,
     private readonly appointments: AppointmentRepository,
   ) {}
-  
+
   async computeFreeSlotsForDate(doctorId: string, date: string): Promise<FreeSlotsContext> {
     const tz = this.config.clinicTz;
     const dayStart = DateTime.fromISO(date, { zone: tz }).startOf('day');

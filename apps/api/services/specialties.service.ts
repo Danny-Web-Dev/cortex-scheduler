@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { Doctor, Specialty } from '@cortex/shared';
 import { DoctorRepository, SpecialtyRepository } from '@/repositories';
-import { NotFoundException } from '@/utils';
+import { NotFoundException, toDoctorDto, toSpecialtyDto } from '@/utils';
 
 @Injectable()
 export class SpecialtiesService {
@@ -12,13 +12,7 @@ export class SpecialtiesService {
 
   async list(): Promise<Specialty[]> {
     const rows = await this.specialties.findAll();
-    return rows.map((s) => ({
-      id: s.id,
-      name: s.name,
-      description: s.description,
-      icon: s.icon,
-      avgDurationMin: s.avgDurationMin,
-    }));
+    return rows.map(toSpecialtyDto);
   }
 
   async listDoctors(specialtyId: string): Promise<Doctor[]> {
@@ -26,13 +20,6 @@ export class SpecialtiesService {
     if (!specialty) throw new NotFoundException('Specialty not found');
 
     const rows = await this.doctors.findBySpecialty(specialtyId);
-    return rows.map((d) => ({
-      id: d.id,
-      name: d.name,
-      specialtyId: d.specialtyId,
-      yearsExperience: d.yearsExperience,
-      rating: d.rating,
-      bio: d.bio,
-    }));
+    return rows.map(toDoctorDto);
   }
 }

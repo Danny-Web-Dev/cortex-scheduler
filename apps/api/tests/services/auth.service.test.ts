@@ -2,11 +2,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthService } from '@/services/auth.service';
 import {
   sha256,
-  OTP_MAX_ATTEMPTS,
   OtpAttemptsExceededException,
   OtpExpiredException,
   OtpInvalidException,
 } from '@/utils';
+import { OTP_MAX_ATTEMPTS } from '@/config';
 import type { PrismaService } from '@/models';
 import type { ConfigService } from '@/config';
 import type { OtpRepository, UserRepository } from '@/repositories';

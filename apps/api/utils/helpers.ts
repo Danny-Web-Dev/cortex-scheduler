@@ -1,4 +1,3 @@
-export const HOLD_TTL_MIN = 5;
-
+// General-purpose pure functions with no other natural home.
 export const slotKeyFor = (doctorId: string, startsAtIso: string): string =>
   `${doctorId}#${startsAtIso}`;

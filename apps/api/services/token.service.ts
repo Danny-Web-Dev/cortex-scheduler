@@ -2,18 +2,10 @@ import { randomUUID } from 'node:crypto';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@/models';
-import { ConfigService } from '@/config';
+import { ACCESS_TOKEN_TTL, ConfigService, MS_PER_DAY, REFRESH_TOKEN_TTL_DAYS } from '@/config';
 import { RefreshTokenRepository } from '@/repositories';
-import {
-  ACCESS_TOKEN_TTL,
-  REFRESH_TOKEN_TTL_DAYS,
-  UnauthorizedException,
-  generateRefreshToken,
-  sha256,
-} from '@/utils';
+import { UnauthorizedException, generateRefreshToken, sha256 } from '@/utils';
 import type { IssuedRefreshToken, JwtPayload, RotatedTokens } from '@/types';
-
-const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 @Injectable()
 export class TokenService {
@@ -33,7 +25,9 @@ export class TokenService {
   }
 
   async startFamily(userId: string): Promise<IssuedRefreshToken> {
-    return this.persistRefreshToken(userId, randomUUID());
+    const { token, data } = this.buildRefreshToken(userId, randomUUID());
+    const created = await this.refreshTokens.create(data);
+    return { token, expiresAt: created.expiresAt };
   }
 
   async rotate(presentedToken: string): Promise<RotatedTokens> {
@@ -52,16 +46,8 @@ export class TokenService {
 
     const rotated = await this.prisma.$transaction(async (tx) => {
       await this.refreshTokens.revokeById(existing.id, tx);
-      const token = generateRefreshToken();
-      const created = await this.refreshTokens.create(
-        {
-          userId: existing.userId,
-          tokenHash: sha256(token),
-          familyId: existing.familyId,
-          expiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL_DAYS * MS_PER_DAY),
-        },
-        tx,
-      );
+      const { token, data } = this.buildRefreshToken(existing.userId, existing.familyId);
+      const created = await this.refreshTokens.create(data, tx);
       return { token, expiresAt: created.expiresAt };
     });
 
@@ -73,14 +59,16 @@ export class TokenService {
     await this.refreshTokens.revokeByHash(sha256(presentedToken));
   }
 
-  private async persistRefreshToken(userId: string, familyId: string): Promise<IssuedRefreshToken> {
+  // One place that knows how a refresh-token row is built: fresh random token,
+  // stored only as a hash, expiring REFRESH_TOKEN_TTL_DAYS from now.
+  private buildRefreshToken(userId: string, familyId: string) {
     const token = generateRefreshToken();
-    const created = await this.refreshTokens.create({
+    const data = {
       userId,
       tokenHash: sha256(token),
       familyId,
       expiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL_DAYS * MS_PER_DAY),
-    });
-    return { token, expiresAt: created.expiresAt };
+    };
+    return { token, data };
   }
 }

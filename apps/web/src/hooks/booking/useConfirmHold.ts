@@ -8,7 +8,10 @@ import { queryKeys, ROUTES } from '@/config';
 import { holdStore } from '@/state/hold';
 import { useToast } from '@/state/toast';
 import { resolveErrorMessage } from '@/utils';
+import { useHoldCountdown } from '@/hooks';
 
+// Everything the confirm step needs about its hold: the countdown plus the
+// confirm/release mutations. ConfirmHoldProvider exposes this via context.
 export const useConfirmHold = (held: Appointment) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -16,14 +19,18 @@ export const useConfirmHold = (held: Appointment) => {
   const { notify } = useToast();
   const confirm = useConfirmAppointmentMutation();
   const release = useReleaseHoldMutation();
+  const { label, isExpired } = useHoldCountdown(held.holdExpiresAt ?? new Date().toISOString());
 
   const backToSlots = () => {
-    void queryClient.invalidateQueries({ queryKey: ['doctors', held.doctorId, 'slots'] });
+    void queryClient.invalidateQueries({ queryKey: queryKeys.slotsByDoctor(held.doctorId) });
     navigate(ROUTES.book.slotWithDoctor({ specialtyId: held.specialtyId, doctorId: held.doctorId }));
     holdStore.clear();
   };
 
   return {
+    held,
+    label,
+    isExpired,
     confirm: () =>
       confirm.mutate(held.id, {
         onSuccess: () => {

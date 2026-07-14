@@ -3,17 +3,10 @@ import { Throttle } from '@nestjs/throttler';
 import { ApiTags } from '@nestjs/swagger';
 import type { Request, Response } from 'express';
 import type { AuthTokens, RequestOtpResponse, VerifyOtpResponse } from '@cortex/shared';
-import { ConfigService } from '@/config';
+import { ConfigService, OTP_THROTTLE_LIMIT, OTP_THROTTLE_TTL_MS, REFRESH_COOKIE_NAME } from '@/config';
 import { AuthService } from '@/services';
 import { RequestOtpDto, VerifyOtpDto } from '@/dtos';
-import {
-  OTP_THROTTLE_LIMIT,
-  OTP_THROTTLE_TTL_MS,
-  REFRESH_COOKIE_NAME,
-  UnauthorizedException,
-  clearRefreshCookie,
-  setRefreshCookie,
-} from '@/utils';
+import { UnauthorizedException, clearRefreshCookie, setRefreshCookie } from '@/utils';
 
 const otpThrottle = { default: { limit: OTP_THROTTLE_LIMIT, ttl: OTP_THROTTLE_TTL_MS } };
 
