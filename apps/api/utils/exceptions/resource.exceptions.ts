@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import type { ErrorCode } from '@cortex/shared';
-import { DomainException } from '@/utils';
+import { DomainException } from './domain.exception';
 
 export class NotFoundException extends DomainException {
   readonly code: ErrorCode = 'NOT_FOUND';

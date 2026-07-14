@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import type { ErrorCode } from '@cortex/shared';
-import { DomainException } from '@/utils';
+import { DomainException } from './domain.exception';
 
 export class OtpInvalidException extends DomainException {
   readonly code: ErrorCode = 'OTP_INVALID';
