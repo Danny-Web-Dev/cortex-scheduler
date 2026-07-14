@@ -117,7 +117,7 @@ src/
 - Every query renders three states: loading (skeleton), error (retryable message keyed off `error.code`), success.
 - Mutations: optimistic where safe, invalidate related queries on settle.
 - Tailwind only, custom components — no UI kit. Shared primitives in `components/ui/`.
-- Components: named export, co-located tests (`SlotGrid.tsx` + `SlotGrid.test.tsx`; hooks likewise); typed props only where props are sanctioned above.
+- Components: named export, tests in `apps/web/tests/` mirroring `src/` (`src/components/SlotGrid.tsx` → `tests/components/SlotGrid.test.tsx`; hooks likewise); typed props only where props are sanctioned above.
 
 ### Golden example — component/hook split
 
@@ -181,7 +181,7 @@ export const ConfirmStep = ({ hold, onConfirm, confirming }: ConfirmStepProps) =
 
 ## 4. Testing
 
-- Vitest, tests co-located next to source (`*.test.ts`)
+- Vitest, tests live in a per-workspace `tests/` folder mirroring the layer/source structure (`apps/api/tests/services/foo.service.test.ts` tests `apps/api/services/foo.service.ts`; same pattern in `apps/web` and `packages/shared`) — never co-located next to source
 - Priority order: slot computation logic → OTP + refresh token services → booking conflicts/holds → UI smoke tests
 - Test behavior, not implementation
 

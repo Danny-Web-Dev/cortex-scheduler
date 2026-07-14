@@ -11,9 +11,7 @@ export class RefreshTokenRepository {
     return (tx ?? this.prisma).refreshToken.create({ data });
   }
 
-  findByHashWithUser(
-    tokenHash: string,
-  ): Promise<(RefreshToken & { user: User }) | null> {
+  findByHashWithUser(tokenHash: string): Promise<(RefreshToken & { user: User }) | null> {
     return this.prisma.refreshToken.findUnique({
       where: { tokenHash },
       include: { user: true },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { RequestOtpSchema, normalizePhone } from './auth';
+import { RequestOtpSchema, normalizePhone } from '../../src/schemas/auth';
 
 describe('normalizePhone', () => {
   it('rewrites local Israeli format to +972', () => {

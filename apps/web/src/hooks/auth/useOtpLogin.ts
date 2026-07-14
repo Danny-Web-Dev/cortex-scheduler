@@ -15,8 +15,6 @@ import { resolveErrorMessage } from '@/utils';
 
 type Step = 'phone' | 'code' | 'name';
 
-// Drives the two-step phone → OTP login. Components below only render its state.
-// A refreshed session that never finished registration resumes at the name step.
 const initialStep = (): Step => {
   const { accessToken, user } = authStore.getState();
   if (accessToken && user && !user.name) return 'name';

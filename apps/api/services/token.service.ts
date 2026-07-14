@@ -59,8 +59,6 @@ export class TokenService {
     await this.refreshTokens.revokeByHash(sha256(presentedToken));
   }
 
-  // One place that knows how a refresh-token row is built: fresh random token,
-  // stored only as a hash, expiring REFRESH_TOKEN_TTL_DAYS from now.
   private buildRefreshToken(userId: string, familyId: string) {
     const token = generateRefreshToken();
     const data = {
