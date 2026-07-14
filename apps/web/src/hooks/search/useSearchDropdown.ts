@@ -59,7 +59,6 @@ export const useSearchDropdown = () => {
 
   const onFocus = () => setOpen(true);
 
-  // Delay close so a click on a result registers before blur hides the list.
   const onBlur = () => {
     blurTimer.current = setTimeout(() => setOpen(false), BLUR_CLOSE_DELAY_MS);
   };

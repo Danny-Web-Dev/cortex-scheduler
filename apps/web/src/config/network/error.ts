@@ -1,6 +1,5 @@
 import type { ErrorCode } from '@cortex/shared';
 
-// A typed error the UI can switch on by `code` — never by parsing messages.
 export class ApiError extends Error {
   readonly code: ErrorCode;
   readonly status: number;

@@ -9,10 +9,6 @@ import { holdStore } from '@/state/hold';
 import { useToast } from '@/state/toast';
 import { resolveErrorMessage } from '@/utils';
 
-// Confirm / release actions for a held appointment. A 410 means the hold expired
-// mid-request — send the user back to the slot grid to pick again. We navigate
-// away from /book/confirm before clearing the hold store, so ConfirmStep's
-// "no hold" guard can't race the redirect.
 export const useConfirmHold = (held: Appointment) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
