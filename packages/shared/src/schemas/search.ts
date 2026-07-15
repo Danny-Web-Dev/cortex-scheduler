@@ -7,7 +7,6 @@ export const SearchQuerySchema = z.object({
   q: z.string().trim().min(SEARCH_MIN_LENGTH).max(100),
 });
 
-// Doctors in search results carry their specialty name for context.
 const SearchDoctorSchema = DoctorSchema.extend({ specialtyName: z.string() });
 
 export const SearchResultSchema = z.object({

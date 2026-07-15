@@ -10,8 +10,6 @@ import { useToast } from '@/state/toast';
 import { resolveErrorMessage } from '@/utils';
 import { useHoldCountdown } from '@/hooks';
 
-// Everything the confirm step needs about its hold: the countdown plus the
-// confirm/release mutations. ConfirmHoldProvider exposes this via context.
 export const useConfirmHold = (held: Appointment) => {
   const { t } = useTranslation();
   const navigate = useNavigate();

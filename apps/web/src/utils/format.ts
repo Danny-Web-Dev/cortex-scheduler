@@ -1,5 +1,3 @@
-// Display formatting lives at the browser edge. The API speaks UTC ISO; we
-// localize with native Intl using the viewer's own timezone.
 const SECONDS_PER_MINUTE = 60;
 
 export const formatSlotTime = (iso: string): string =>
@@ -15,12 +13,9 @@ export const formatFullDateTime = (iso: string): string =>
     timeZoneName: 'short',
   });
 
-// The viewer's IANA zone (e.g. "Asia/Jerusalem"), named so booking times are
-// never ambiguous about which timezone they are shown in.
 export const localTimeZoneLabel = (): string =>
   Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-// mm:ss for the hold countdown.
 export const formatCountdown = (totalSeconds: number): string => {
   const clamped = Math.max(0, totalSeconds);
   const minutes = Math.floor(clamped / SECONDS_PER_MINUTE);
@@ -31,8 +26,6 @@ export const formatCountdown = (totalSeconds: number): string => {
 const LOCAL_PREFIX_LENGTH = 3;
 const LOCAL_MAX_DIGITS = 10;
 
-// Shapes raw keystrokes into 054-1234567 as the user types a local number,
-// while still letting them type +972... for the international form untouched.
 export const formatPhoneInput = (raw: string): string => {
   const allowed = raw.replace(/[^\d+-]/g, '');
   if (allowed.startsWith('+')) return allowed;

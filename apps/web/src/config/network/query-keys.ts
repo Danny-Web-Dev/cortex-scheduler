@@ -1,7 +1,5 @@
 import type { AppointmentScope } from '@cortex/shared';
 
-// Single source of truth for React Query cache keys.
-// Prefix key for invalidating a doctor's slots across every date at once.
 const slotsByDoctor = (doctorId: string) => ['doctors', doctorId, 'slots'] as const;
 
 export const queryKeys = {
@@ -15,7 +13,6 @@ export const queryKeys = {
   search: (q: string) => ['search', q] as const,
 };
 
-// Mutation keys let sibling units observe in-flight mutations via useIsMutating.
 export const mutationKeys = {
   bookSlot: ['book-slot'] as const,
 };

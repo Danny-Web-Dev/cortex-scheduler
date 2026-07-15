@@ -4,8 +4,6 @@ const APPOINTMENT_STATUSES = ['HELD', 'CONFIRMED', 'CANCELLED', 'COMPLETED'] as 
 const AppointmentStatusSchema = z.enum(APPOINTMENT_STATUSES);
 export type AppointmentStatusValue = z.infer<typeof AppointmentStatusSchema>;
 
-// --- Catalog response DTOs ---
-
 export const SpecialtySchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -26,7 +24,6 @@ export const DoctorSchema = z.object({
 export type Doctor = z.infer<typeof DoctorSchema>;
 
 const SlotSchema = z.object({
-  // UTC ISO start instant.
   startsAt: z.string().datetime(),
   durationMin: z.number().int(),
 });
@@ -39,8 +36,6 @@ export const SlotsResponseSchema = z.object({
 });
 export type SlotsResponse = z.infer<typeof SlotsResponseSchema>;
 
-// --- Query params ---
-
 export const SlotsQuerySchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'date must be YYYY-MM-DD'),
 });
@@ -52,8 +47,6 @@ export const MeAppointmentsQuerySchema = z.object({
   scope: AppointmentScopeSchema.default('upcoming'),
 });
 
-// --- Booking request DTOs ---
-
 export const HoldAppointmentSchema = z.object({
   doctorId: z.string().min(1),
   startsAt: z.string().datetime(), // UTC ISO, re-validated server-side
@@ -64,8 +57,6 @@ export const RescheduleAppointmentSchema = z.object({
   startsAt: z.string().datetime(),
 });
 export type RescheduleAppointmentInput = z.infer<typeof RescheduleAppointmentSchema>;
-
-// --- Appointment response DTO ---
 
 export const AppointmentSchema = z.object({
   id: z.string(),

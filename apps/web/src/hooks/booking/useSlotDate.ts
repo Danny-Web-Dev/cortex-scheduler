@@ -3,11 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 const tomorrowIso = (): string => {
   const d = new Date();
   d.setDate(d.getDate() + 1);
-  return d.toLocaleDateString('en-CA'); // YYYY-MM-DD in local time
+  return d.toLocaleDateString('en-CA');
 };
 
-// The selected slot date lives in the URL so sibling units read the same value
-// without prop threading, and the slot page stays shareable/refresh-safe.
 export const useSlotDate = () => {
   const [params, setParams] = useSearchParams();
   const date = params.get('date') ?? tomorrowIso();

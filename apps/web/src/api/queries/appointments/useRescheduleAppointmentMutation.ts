@@ -5,8 +5,6 @@ import { mutationKeys } from '@/config';
 
 type RescheduleAppointmentArgs = { id: string; input: RescheduleAppointmentInput };
 
-// Shares mutationKeys.bookSlot with useHoldAppointmentMutation so
-// SlotReservingIndicator's useIsMutating check catches either one in flight.
 export const useRescheduleAppointmentMutation = () =>
   useMutation({
     mutationKey: mutationKeys.bookSlot,

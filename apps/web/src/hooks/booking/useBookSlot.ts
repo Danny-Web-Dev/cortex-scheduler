@@ -13,10 +13,6 @@ type UseBookSlotArgs = {
   rescheduleId: string | null;
 };
 
-// Selecting a slot either holds it (normal booking → confirm step) or reschedules
-// an existing appointment onto it (atomic on the server → straight to the list).
-// A 409/validation means the slot was taken between load and click — toast and
-// refresh the grid.
 export const useBookSlot = ({ doctorId, date, rescheduleId }: UseBookSlotArgs) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -54,10 +50,6 @@ export const useBookSlot = ({ doctorId, date, rescheduleId }: UseBookSlotArgs) =
       { doctorId, startsAt },
       {
         onSuccess: async (appointment) => {
-          // Await the route commit before storing the hold. navigate() (data
-          // router) resolves after the URL has actually moved, so this
-          // guarantees window.location — which HoldToast reads directly — is
-          // already /book/confirm by the time the store update fires.
           await navigate(ROUTES.book.confirm);
           holdStore.setHold(appointment);
         },

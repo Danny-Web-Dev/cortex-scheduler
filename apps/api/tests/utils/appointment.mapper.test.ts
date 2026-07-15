@@ -10,9 +10,7 @@ import type { AppointmentWithRelations } from '@/types';
 const NOW = new Date('2026-07-11T12:00:00.000Z');
 const DURATION_MIN = 30;
 
-// Started 10:00, ended 10:30 — before NOW.
 const endedStart = new Date('2026-07-11T10:00:00.000Z');
-// Starts 14:00 — after NOW.
 const futureStart = new Date('2026-07-11T14:00:00.000Z');
 
 describe('isEndedConfirmed', () => {
@@ -29,7 +27,6 @@ describe('isEndedConfirmed', () => {
   });
 
   it('is false while a CONFIRMED appointment is in progress (started, not ended)', () => {
-    // Starts 11:45, ends 12:15 — spans NOW (12:00), so not yet ended.
     const inProgress = new Date('2026-07-11T11:45:00.000Z');
     expect(
       isEndedConfirmed({ status: 'CONFIRMED', startsAt: inProgress, durationMin: DURATION_MIN }, NOW),

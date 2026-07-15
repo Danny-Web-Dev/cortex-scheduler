@@ -4,7 +4,6 @@ import { ApiError } from '@/api';
 const STALE_MS = 30_000;
 const MAX_RETRIES = 1;
 
-// Don't retry client errors (4xx) — only transient failures.
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
